@@ -1,14 +1,15 @@
 <template>
-  <div class="order">
-    order
+  <div class="seller-detail">
+    seller-detail
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'order',
+  name: 'seller-detail',
   data () {
     return {
+
     }
   }
 }

@@ -23,15 +23,62 @@ const Profile = (resolve) => {
     resolve(module)
   })
 }
+const Seller = (resolve) => {
+  import('components/seller/seller').then((module) => {
+    resolve(module)
+  })
+}
+const MenuList = (resolve) => {
+  import('components/menu-list/menu-list').then((module) => {
+    resolve(module)
+  })
+}
+const Rating = (resolve) => {
+  import('components/rating/rating').then((module) => {
+    resolve(module)
+  })
+}
+const SellerDetail = (resolve) => {
+  import('components/seller-detail/seller-detail').then((module) => {
+    resolve(module)
+  })
+}
 export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/miste'
+      redirect: 'miste'
     },
     {
       path: '/miste',
-      component: Miste
+      component: Miste,
+      children: [
+        {
+          path: ':id',
+          component: Seller,
+          children: [
+            {
+              path: '',
+              redirect: 'menu',
+              component: MenuList
+            },
+            {
+              // 不加'/',否则找不到正确的router-view出口
+              // 以 / 开头的嵌套路径会被当作根路径。
+              path: 'menu',
+              component: MenuList
+            },
+            {
+              path: 'rating',
+              component: Rating
+            },
+            {
+              path: 'seller-detail',
+              component: SellerDetail
+            }
+          ]
+        }
+      ]
     },
     {
       path: '/order',

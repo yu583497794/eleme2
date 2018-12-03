@@ -23,6 +23,22 @@ export function getBanners () {
     params: data
   })
 }
+// 手机api需要登录
+// export function getRecommends (offset = 0, limit = 8, other = {}) {
+//   const data = Object.assign({}, {
+//     latitude: 30.507451,
+//     longitude: 114.410972,
+//     offset,
+//     limit,
+//     extras: ['activities', 'tags'],
+//     extra_filters: 'home',
+//     rank_id: offset === 0 ? '' : 'b2d76784c48b4a95965886ad72ab5e9c',
+//     terminal: 'h5'
+//   }, other)
+//   return axios.get('/api/recommends', {
+//     params: data
+//   })
+// }
 
 export function getRecommends (offset = 0, limit = 8, other = {}) {
   const data = Object.assign({}, {
@@ -31,9 +47,10 @@ export function getRecommends (offset = 0, limit = 8, other = {}) {
     offset,
     limit,
     extras: ['activities', 'tags'],
-    extra_filters: 'home',
-    rank_id: offset === 0 ? '' : 'b2d76784c48b4a95965886ad72ab5e9c',
-    terminal: 'h5'
+    // extra_filters: 'home',
+    // rank_id: offset === 0 ? '' : 'b2d76784c48b4a95965886ad72ab5e9c',
+    terminal: 'web',
+    geohash: 'wt3mee622q3t'
   }, other)
   return axios.get('/api/recommends', {
     params: data

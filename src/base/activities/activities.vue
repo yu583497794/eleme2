@@ -1,12 +1,11 @@
 <template>
-  <div class="order">
-    order
+  <div class="activities">
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'order',
+  name: 'activities',
   data () {
     return {
     }

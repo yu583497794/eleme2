@@ -35,6 +35,7 @@ export default {
     right 0
     display flex
     border-top 1px solid $color-text-d
+    z-index -1
     .foot-item
       flex 1
       text-align center

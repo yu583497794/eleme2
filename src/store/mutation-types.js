@@ -1,1 +1,1 @@
-export const SET_SELECTED = 'SET_SELECTED'
+export const SET_SELLER = 'SET_SELLER'

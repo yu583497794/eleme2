@@ -1,14 +1,15 @@
 <template>
-  <div class="order">
-    order
+  <div class="rating">
+    rating
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'order',
+  name: 'rating',
   data () {
     return {
+
     }
   }
 }

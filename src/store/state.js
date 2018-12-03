@@ -1,5 +1,5 @@
 const state = {
-  selected: 'miste'
+  seller: {}
 }
 
 export default state

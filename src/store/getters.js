@@ -1,1 +1,1 @@
-export const selected = state => state.selected
+export const seller = state => state.seller
