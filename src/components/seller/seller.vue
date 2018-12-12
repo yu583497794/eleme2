@@ -86,15 +86,21 @@ export default {
       if (!this.fixed && event.target.scrollTop >= this.fixHeight) {
         this.fixed = true
         window.eventBus.$emit('eventFixed', true, this.tabHeight)
+        return
       }
       if (this.fixed && event.target.scrollTop <= this.fixHeight) {
         this.fixed = false
         window.eventBus.$emit('eventFixed', false, this.tabHeight)
+        return
       }
       if (this.fixed) {
         let scrollTop = event.target.scrollTop - this.fixHeight
         window.eventBus.$emit('foodScroll', scrollTop)
       }
+    },
+    scrollTo (height) {
+      let seller = document.getElementById('seller')
+      seller.scrollTo(0, height)
     }
   },
   computed: {
@@ -112,6 +118,16 @@ export default {
     EventUtil.addHandler(seller, 'scroll', this.scrollHandler)
     this.fixHeight = head.clientHeight
     this.tabHeight = tab.clientHeight
+  },
+  created () {
+    if (!this.seller.id) {
+      this.$router.push('/')
+      return
+    }
+    window.eventBus.$on('scrollToCat', (height) => {
+      // const offsetHeight = this.fixHeight + this.tabHeight
+      this.scrollTo(height + this.fixHeight)
+    })
   }
 }
 </script>

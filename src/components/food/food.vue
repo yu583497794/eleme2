@@ -16,7 +16,10 @@
         <li class="menu-category-list food-list-hook" v-for="(category, index) in menuList" :key="index">
           <h3 class="category-name">{{category.name}}<span class="desc">{{category.description}}</span></h3>
           <ul class="menu-category-list-item-wrapper">
-            <li class="menu-category-list-item" v-for="(food, foodIndex) in category.foods" :key="foodIndex">
+            <li class="menu-category-list-item"
+              v-for="(food, foodIndex) in category.foods"
+              :key="foodIndex"
+              @click.stop="selectFood(food)">
               <div class="image">
                 <img v-lazy="getUrl(food.image_path)">
               </div>
@@ -33,7 +36,10 @@
                     <span>好评率{{food.satisfy_rate}}%</span>
                   </section>
                   <section class="price">
-                    <span>¥{{getPrice(food.specfoods)}}</span><span v-if="food.specfoods.length > 1">起</span>
+                    <span>¥{{getPrice(food)}}</span><span v-if="food.specfoods.length > 1">起</span>
+                    <div class="cart-button-wrapper">
+                      <cart-button :food="food"></cart-button>
+                    </div>
                   </section>
                 <!-- </div> -->
               </div>
@@ -43,15 +49,41 @@
         <li class="food-tip">没有更多了~</li>
       </ul>
     </div>
-    <div v-show="fixed" ref="fixed-category" class="fixed-category">
+    <div ref="fixed-category"  id="fixed-category" class="fixed-category">
       <h3 class="category-name" v-if="fixed">{{fixedCategoryName}}<span class="desc">{{fixedCategoryDesc}}</span></h3>
     </div>
+    <transition name="raise">
+      <div class="food-detail" v-if="selectedFood.name" @scroll.stop>
+        <div class="food-img">
+          <img :src="getUrl(selectedFood.image_path)">
+        </div>
+        <div class="food-desc">
+          <section>
+            <h3 class="food-name">{{selectedFood.name}}</h3>
+          </section>
+          <section class="sales-and-rating">
+            <span class="sales">月售{{selectedFood.month_sales}}份</span>
+            <span>好评率{{selectedFood.satisfy_rate}}%</span>
+          </section>
+          <section class="price">
+            <span>¥{{getPrice(selectedFood)}}</span><span v-if="selectedFood.specfoods.length > 1">起</span>
+          </section>
+          <section v-if="selectedFood.description" class="desc">
+            <span>{{selectedFood.description}}</span>
+          </section>
+        </div>
+        <div class="close" @click="closeDetail">
+          <icon name="close" scale="2" class="icon-close"></icon>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import {extraUrl} from 'common/js/banner'
 import {EventUtil} from 'common/js/dom-util'
+import CartButton from 'base/cart-button/cart-button'
 const TITLE_HEIGHT = 28
 export default {
   name: 'food',
@@ -60,7 +92,8 @@ export default {
       top: 0,
       fixed: false,
       listHeight: [],
-      currentIndex: 0
+      currentIndex: 0,
+      selectedFood: {}
     }
   },
   props: {
@@ -70,14 +103,29 @@ export default {
     }
   },
   methods: {
-    getPrice (spec) {
-      let minprice = spec[0].price
-      spec.forEach(item => {
-        if (item.price < minprice) {
-          minprice = item.price
+    getPrice (food) {
+      let minPrice = food.specfoods[0].price
+      food.specfoods.forEach(spec => {
+        if (spec.price < minPrice) {
+          minPrice = spec.price
         }
       })
-      return minprice
+      return minPrice
+      // if (food.specifications.length !== 0) {
+      //   console.log('spec')
+      //   food.specfoods.forEach((spec) => {
+      //     spec.specs.forEach(item => {
+      //       if (item.value === food.specifications[0].values[0]) {
+      //         return spec.price
+      //       }
+      //     })
+      //     if (spec.specs[0].value === food.specifications[0].values[0]) {
+      //       return spec.price
+      //     }
+      //   })
+      // } else {
+      //   return food.specfoods[0].price
+      // }
     },
     getUrl (path) {
       return extraUrl(path)
@@ -101,9 +149,8 @@ export default {
       menu.style.overflow = 'scroll'
     },
     _calculateHeight () {
-      console.log('_cal')
+      // 容易报错的地方
       let foodList = document.getElementsByClassName('food-list-hook')
-      console.log(foodList.length)
       let height = 0
       this.listHeight.push(height)
       // foodList.forEach((item, index) => {
@@ -130,7 +177,19 @@ export default {
       // category.style['z-index'] = 1
     },
     selectCategory (index) {
+      if (this.currentIndex === index) {
+        return
+      }
       this.currentIndex = index
+      window.eventBus.$emit('scrollToCat', this.listHeight[index])
+    },
+    selectFood (food) {
+      console.log('select food')
+      this.selectedFood = food
+      console.log(food)
+    },
+    closeDetail () {
+      this.selectedFood = {}
     }
   },
   computed: {
@@ -162,15 +221,18 @@ export default {
     window.eventBus.$on('eventFixed', (flag, height) => {
       this.top = height
       this.fixed = flag
-      const category = this.$refs['fixed-category']
-      category.style.top = this.top + 'px'
+      // ???console.log(category)
+      if (this.fixed) {
+        // let category = this.$refs['fixed-category']
+        let category = document.getElementById('fixed-category')
+        category.style.top = this.top + 'px'
+      }
     })
   },
   mounted () {
     // this.resetMenu()
     this.$nextTick(() => {
       setTimeout(() => {
-        console.log('mounted')
         this._calculateHeight()
       }, 1000)
       this.resetMenu()
@@ -181,25 +243,29 @@ export default {
       if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
         // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
         let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-        console.log(diff)
+        // console.log(diff)
         if (this.diff === diff) {
           return
         }
         this.diff = diff
-        this.$refs['fixed-category'].style.transform = `translate3d(0, -${diff}px, 0)`
+        const category = document.getElementById('fixed-category')
+        category.style.transform = `translate3d(0, -${diff}px, 0)`
         return
       }
       if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
-        console.log('++')
+        // console.log('++')
         this.currentIndex++
       } else {
         if (scrollTop < this.listHeight[this.currentIndex]) {
-          console.log('--')
+          // console.log('--')
           this.currentIndex--
         }
       }
     })
     this._initFixedCategory()
+  },
+  components: {
+    CartButton
   }
 }
 </script>
@@ -281,10 +347,16 @@ export default {
                   position absolute
                   left 0
                   bottom 2.666667vw
-                  font-size $font-size-medium
-                  color $color-text-price
+                  font-size 0
                   span
+                    font-size $font-size-medium
+                    color $color-text-price
                     font-weight bold
+                    vertical-align middle
+                  .cart-button-wrapper
+                    display inline-block
+                    float right
+                    vertical-align middle
     .fixed-category
       position fixed
       right 0
@@ -302,4 +374,40 @@ export default {
           font-size $font-size-small
           color $color-text-l
           margin-left 1.333333vw
+    .food-detail
+      position fixed
+      z-index 1
+      top 0
+      right 0
+      left 0
+      bottom 12.8vw
+      background-color $color-background
+      .close
+        position absolute
+        top 2.5vw
+        right 2.5vw
+        .icon-close
+          fill $color-theme
+      .food-img
+        width 100%
+        height 100vw
+        img
+          width 100%
+          height 100%
+      .food-desc
+        padding 4vw 4vw 0 4vw
+        &>section
+          margin-bottom 2.4vw
+          .food-name
+            font-size $font-size-large
+            font-weight 700
+          &.sales-and-rating
+            font-size $font-size-small
+            color $color-text-l
+          &.price
+            font-size $font-size-medium-x
+            color $color-text-price
+          &.desc
+            font-size $font-size-small
+            color $color-text-l
 </style>
