@@ -184,9 +184,7 @@ export default {
       window.eventBus.$emit('scrollToCat', this.listHeight[index])
     },
     selectFood (food) {
-      console.log('select food')
       this.selectedFood = food
-      console.log(food)
     },
     closeDetail () {
       this.selectedFood = {}

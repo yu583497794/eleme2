@@ -1,56 +1,65 @@
 <template>
   <div class="cart-button" @click.stop="hiddenSpec" @scroll.stop>
     <div class="button-group">
-      <span class="minus">
-        <icon class="icon" name="minus" scale="1.5" fill="#ffcd32"></icon>
-      </span>
+      <transition name="fade-rotate">
+        <span class="minus" @click.stop="minusFood" v-show="count > 0">
+          <icon class="icon inner" name="minus" scale="1.5" fill="#ffcd32"></icon>
+        </span>
+      </transition>
       <span class="add" @click.stop="addFood">
         <icon class="icon" name="add-fill" scale="1.5" fill="#ffcd32"></icon>
       </span>
     </div>
-    <div class="spec-wrapper" v-if="specShow && food.specifications.length > 0">
-      <div class="spec-content">
-        <div class="specpanel-header">
-          <div class="food-icon">
-            <img :src="getUrl(food.image_path)">
+    <transition name="fadeup">
+      <div class="spec-wrapper" v-if="specShow && food.specifications.length > 0">
+        <div class="spec-content">
+          <div class="specpanel-header">
+            <div class="food-icon">
+              <img :src="getUrl(food.image_path)">
+            </div>
+            <div class="food-desc">
+              <h3 class="name">{{food.name}}</h3>
+              <ul class="selected">
+                <p>已选:<span>{{food.specifications[0].values[currentSpec]}}</span>{{getAttr}}</p>
+              </ul>
+              <div class="price">¥{{currentPrice}}</div>
+            </div>
+            <div class="close">
+              <icon name="close" scale="1.5" @click.stop="hiddenSpec"></icon>
+            </div>
           </div>
-          <div class="food-desc">
-            <h3 class="name">{{food.name}}</h3>
-            <ul class="selected">
-              <span>已选:</span>
+          <div class="specpanel-body">
+            <div class="specpanel-main">
+              <p class="specpanel-colTitle">{{food.specifications[0].name}}</p>
+              <ul class="specpanel-content">
+                <li v-for="(value, index) in food.specifications[0].values"
+                  :key="index"
+                  class="specpanel-item"
+                  @click.stop="selectSpec(index)"
+                  :class="{'current-spec': currentSpec === index, 'invalid': priceList[index] === undefined}"><span>{{value}}</span></li>
+              </ul>
+            </div>
+            <ul v-for="(attr, aIndex) in food.attrs" :key="aIndex" class="specpanel-main">
+              <p class="specpanel-colTitle">{{attr.name}}</p>
+              <ul class="specpanel-content">
+                <li v-for="(value, vIndex) in attr.values"
+                  :key="vIndex"
+                  class="specpanel-item"
+                  @click.stop="selectAttr(aIndex, vIndex)"
+                  :class="{'current-attr': attrList[aIndex] === vIndex || (!attrList[aIndex] && vIndex ===0)}">{{value}}</li>
+              </ul>
             </ul>
-            <div class="price">¥{{currentPrice}}</div>
           </div>
-          <div class="close">
-            <icon name="close" scale="1.5" @click.stop="hiddenSpec"></icon>
-          </div>
+          <div class="submit" @click.stop="addSpecFood">选好了</div>
         </div>
-        <div class="specpanel-body">
-          <div class="specpanel-main">
-            <p class="specpanel-colTitle">{{food.specifications[0].name}}</p>
-            <ul class="specpanel-content">
-              <li v-for="(value, index) in food.specifications[0].values"
-                :key="index"
-                class="specpanel-item"
-                @click.stop="selectSpec(index)"
-                :class="{'current-spec': currentSpec === index, 'invalid': !(priceList.length > 0)}"><span>{{value}}</span></li>
-            </ul>
-          </div>
-          <ul v-for="(attr, aIndex) in food.attrs" :key="aIndex" class="specpanel-main">
-            <p class="specpanel-colTitle">{{attr.name}}</p>
-            <ul class="specpanel-content">
-              <li v-for="(value, vIndex) in attr.values" :key="vIndex" class="specpanel-item">{{value}}</li>
-            </ul>
-          </ul>
-        </div>
-        <div class="submit">选好了</div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import {extraUrl} from 'common/js/banner'
+import {mapActions, mapGetters} from 'vuex'
 export default {
   name: 'cart-button',
   data () {
@@ -58,13 +67,22 @@ export default {
       specShow: false,
       currentSpec: 0,
       currentPrice: 0,
-      priceList: []
+      priceList: [],
+      initSpec: null,
+      initPrice: null,
+      attrList: []
+      // 要把数据关联起来
+      // count: 0
     }
   },
   props: {
     food: {
       type: Object,
       default: null
+    },
+    direct: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -72,11 +90,60 @@ export default {
       return extraUrl(path)
     },
     addFood () {
-      if (this.food.specifications) {
-        this.specShow = true
+      if (!this.direct) {
+        if (this.food.specifications.length > 0) {
+          this.specShow = true
+        } else {
+          let selectedFood = {
+            item_id: this.food.item_id,
+            name: this.food.name,
+            price: this.initPrice,
+            spec: null,
+            attrs: null
+          }
+          this.addFoodAction(selectedFood)
+          // this.count++
+        }
+      } else {
+        this.addFoodAction(this.food)
+      }
+    },
+    addSpecFood () {
+      let selectedFood = {
+        item_id: this.food.item_id,
+        name: this.food.name,
+        price: this.currentPrice,
+        spec: this.food.specifications[0].values[this.currentSpec],
+        attr: this.getAttr
+      }
+      this.addFoodAction(selectedFood)
+      // this.count++
+      this.specShow = false
+    },
+    minusFood () {
+      if (!this.direct) {
+        if (this.food.specifications > 0) {
+          alert('请在购物车内删除附带规格的物品')
+        } else {
+          let selectedFood = {
+            item_id: this.food.item_id,
+            name: this.food.name,
+            price: this.initPrice,
+            spec: null,
+            attrs: null
+          }
+          // if (this.count > 0) {
+          //   this.minusFoodAction(selectedFood)
+          //   this.count--
+          // }
+          this.minusFoodAction(selectedFood)
+        }
+      } else {
+        this.minusFoodAction(this.food)
       }
     },
     hiddenSpec () {
+      this.init()
       this.specShow = false
     },
     selectSpec (index) {
@@ -84,7 +151,47 @@ export default {
         return
       }
       this.currentSpec = index
-    }
+    },
+    init () {
+      this.currentSpec = this.initSpec
+      this.currentPrice = this.initPrice
+    },
+    selectAttr (aIndex, vIndex) {
+      if (this.attrList[aIndex] === vIndex) {
+        return
+      }
+      this.$set(this.attrList, aIndex, vIndex)
+      // this.attrList[aIndex] = vIndex
+    },
+    ...mapActions([
+      'addFoodAction',
+      'minusFoodAction'
+    ])
+  },
+  computed: {
+    getAttr () {
+      let text = ''
+      this.food.attrs.forEach((attr, aIndex) => {
+        if (this.attrList[aIndex] === undefined) {
+          text = text + '/' + attr.values[0]
+        } else {
+          text = text + '/' + attr.values[this.attrList[aIndex]]
+        }
+      })
+      return text
+    },
+    count () {
+      let count = 0
+      this.cartList.forEach(item => {
+        if (item.item_id === this.food.item_id) {
+          count += item.count
+        }
+      })
+      return count
+    },
+    ...mapGetters([
+      'cartList'
+    ])
   },
   watch: {
     currentSpec (newVal) {
@@ -92,20 +199,34 @@ export default {
     }
   },
   created () {
-    if (this.food.specifications.length !== 0) {
-      this.food.specifications[0].values.forEach((value, index) => {
-        this.food.specfoods.forEach(spec => {
-          if (spec.specs[0].value === value) {
-            this.priceList[index] = spec.price
+    if (!this.direct) {
+      if (this.food.specifications.length !== 0) {
+        this.food.specifications[0].values.forEach((value, index) => {
+          this.food.specfoods.forEach(spec => {
+            if (spec.specs[0].value === value) {
+              this.priceList[index] = spec.price
+            }
+          })
+        })
+        let minIndex = 0
+        let minPrice
+        this.priceList.forEach((item, index) => {
+          if (item !== undefined && minPrice === undefined) {
+            minPrice = item
+            minIndex = index
+          } else {
+            if (item !== undefined && minPrice > item) {
+              minPrice = item
+              minIndex = index
+            }
           }
         })
-      })
-      this.priceList.forEach((item, index) => {
-        if (item !== undefined) {
-          this.currentSpec = index
-          this.currentPrice = item
-        }
-      })
+        this.initPrice = minPrice
+        this.initSpec = minIndex
+        this.init()
+      } else {
+        this.initPrice = this.food.specfoods[0].price
+      }
     }
   }
 }
@@ -115,6 +236,17 @@ export default {
 @import '~common/stylus/variable'
   .cart-button
     .button-group
+      .minus
+        .inner
+          transform rotate(0deg)
+          display inline-block
+        &.fade-rotate-enter-active,&.fade-rotate-leave-active
+          transition all .5s ease
+        &.fade-rotate-enter,&.fade-rotate-leave-to
+          opacity 0
+          transform translate3d(-2.333333vw, 0, 0)
+          .inner
+            transform rotate(180deg)
       .add
         margin-left 2.333333vw
         .icon
@@ -127,6 +259,10 @@ export default {
       left 0
       z-index 1
       background rgba(0, 0, 0, .7)
+      &.fadeup-enter-active,&.fadeup-leave-active
+        transition all 0.3s ease
+      &.fadeup-enter,&.fadeup-leave-to
+        transform translate3d(0, 100%, 0)
       .spec-content
         position fixed
         bottom 0
@@ -179,7 +315,8 @@ export default {
             .specpanel-content
               display flex
               flex-wrap wrap
-              justify-content flex-start
+              // flex-direction row-reverse
+              // justify-content flex-end
               .specpanel-item
                 flex 0
                 display inline-block
@@ -197,12 +334,12 @@ export default {
                 display flex
                 align-items center
                 justify-content center
-                &.current-spec
+                &.current-spec,&.current-attr
                   background $color-text-l
                   color $color-theme
                 &.invalid
                   color $color-text-l
-                  background $color-dialog-background
+                  background $color-dialog-background-l
       .submit
         height 10.666667vw
         background $color-theme
