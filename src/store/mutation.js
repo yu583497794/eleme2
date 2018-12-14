@@ -17,6 +17,18 @@ const mutation = {
     if (state.cartList[index].count === 0) {
       state.cartList.splice(index, 1)
     }
+  },
+  [types.CLEAR_SELLER_CART] (state, sellerId) {
+    let list = state.cartList.slice()
+    let remove = 0
+    state.cartList.forEach((item, index) => {
+      if (item.seller === sellerId) {
+        list.splice(index - remove, 1)
+        // state.cartList.splice(index - remove, 1)
+        remove++
+      }
+    })
+    state.cartList = list
   }
 }
 

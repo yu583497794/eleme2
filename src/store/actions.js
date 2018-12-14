@@ -2,7 +2,7 @@ import * as types from './mutation-types'
 function findIndex (foodList, food) {
   let i = -1
   foodList.forEach((item, index) => {
-    if (item.item_id === food.item_id && item.spec === food.spec && item.attrs === food.attrs) {
+    if (item.item_id === food.item_id && item.spec === food.spec && item.attr === food.attr) {
       i = index
       return true
     }

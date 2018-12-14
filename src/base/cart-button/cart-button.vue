@@ -54,6 +54,11 @@
         </div>
       </div>
     </transition>
+    <transition name="fade-out">
+      <div class="decrease-tip" v-if="showTipFlag">
+        多规格商品只能在购物车里删除呢~
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -70,7 +75,10 @@ export default {
       priceList: [],
       initSpec: null,
       initPrice: null,
-      attrList: []
+      attrList: [],
+      showTipFlag: false,
+      lastSpec: null,
+      lastAttr: null
       // 要把数据关联起来
       // count: 0
     }
@@ -99,7 +107,9 @@ export default {
             name: this.food.name,
             price: this.initPrice,
             spec: null,
-            attrs: null
+            attr: null,
+            category: this.food.category_id,
+            seller: this.$route.params.id
           }
           this.addFoodAction(selectedFood)
           // this.count++
@@ -114,23 +124,42 @@ export default {
         name: this.food.name,
         price: this.currentPrice,
         spec: this.food.specifications[0].values[this.currentSpec],
-        attr: this.getAttr
+        attr: this.getAttr,
+        category: this.food.category_id,
+        seller: this.$route.params.id
       }
       this.addFoodAction(selectedFood)
+      this.lastSpec = selectedFood.spec
+      this.lastAttr = selectedFood.attr
       // this.count++
       this.specShow = false
     },
     minusFood () {
       if (!this.direct) {
-        if (this.food.specifications > 0) {
-          alert('请在购物车内删除附带规格的物品')
+        if (this.food.specifications.length > 0) {
+          if (this.count > 1) {
+            this.showTip()
+          } else {
+            let selectedFood = {
+              item_id: this.food.item_id,
+              name: this.food.name,
+              price: this.currentPrice,
+              spec: this.lastSpec,
+              attr: this.lastAttr,
+              category: this.food.category_id,
+              seller: this.$route.params.id
+            }
+            this.minusFoodAction(selectedFood)
+          }
         } else {
           let selectedFood = {
             item_id: this.food.item_id,
             name: this.food.name,
             price: this.initPrice,
             spec: null,
-            attrs: null
+            attr: null,
+            category: this.food.category_id,
+            seller: this.$route.params.id
           }
           // if (this.count > 0) {
           //   this.minusFoodAction(selectedFood)
@@ -162,6 +191,12 @@ export default {
       }
       this.$set(this.attrList, aIndex, vIndex)
       // this.attrList[aIndex] = vIndex
+    },
+    showTip () {
+      this.showTipFlag = true
+      setTimeout(() => {
+        this.showTipFlag = false
+      }, 1500)
     },
     ...mapActions([
       'addFoodAction',
@@ -257,7 +292,7 @@ export default {
       bottom 0
       right 0
       left 0
-      z-index 1
+      z-index 2
       background rgba(0, 0, 0, .7)
       &.fadeup-enter-active,&.fadeup-leave-active
         transition all 0.3s ease
@@ -348,4 +383,20 @@ export default {
         font-size $font-size-medium
         text-align center
         line-height 10.666667vw
+    .decrease-tip
+      position fixed
+      top 50%
+      left 50%
+      transform translate3d(-50%, -50%, 0)
+      padding 15.333333vw
+      width 50.666667vw
+      font-size $font-size-small
+      background $color-dialog-background
+      color $color-text
+      opacity 1
+      z-index 1
+      &.fade-out-enter-active,&.fade-out-leave-active
+        transition all 0.3s ease
+      &.fade-out-enter,&.fade-out-leave-to
+        opacity 0
 </style>

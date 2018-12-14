@@ -7,7 +7,8 @@
         v-for="(category, index) in menuList"
         :key="index"
         @click="selectCategory(index)">
-          {{category.name}}
+          <span>{{category.name}}</span>
+          <span class="count-tip" v-if="categoryCountList[index] > 0">{{categoryCountList[index]}}</span>
         </li>
       </ul>
     </div>
@@ -84,6 +85,7 @@
 import {extraUrl} from 'common/js/banner'
 import {EventUtil} from 'common/js/dom-util'
 import CartButton from 'base/cart-button/cart-button'
+import {mapGetters} from 'vuex'
 const TITLE_HEIGHT = 28
 export default {
   name: 'food',
@@ -196,7 +198,33 @@ export default {
     },
     fixedCategoryDesc () {
       return this.menuList[this.currentIndex].description
-    }
+    },
+    categoryCountList () {
+      let list = new Array(this.menuList.length).fill(0)
+      let i
+      this.cartList.forEach(item => {
+        i = -1
+        this.menuList.forEach((category, index) => {
+          if (category.foods[0].category_id === item.category && index !== 0) {
+            i = index
+          }
+        })
+        list[i] += item.count
+      })
+      // this.menuList.forEach((category, index) => {
+      //   list[index] = 0
+      //   time = 0
+      //   this.cartList.forEach(item => {
+      //     if (category.foods[0].category_id === item.category && index !== 0) {
+      //       list[index] = list[index] + item.count
+      //     }
+      //   })
+      // })
+      return list
+    },
+    ...mapGetters([
+      'cartList'
+    ])
   },
   watch: {
     fixed (newVal) {
@@ -219,7 +247,6 @@ export default {
     window.eventBus.$on('eventFixed', (flag, height) => {
       this.top = height
       this.fixed = flag
-      // ???console.log(category)
       if (this.fixed) {
         // let category = this.$refs['fixed-category']
         let category = document.getElementById('fixed-category')
@@ -241,7 +268,6 @@ export default {
       if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
         // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
         let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-        // console.log(diff)
         if (this.diff === diff) {
           return
         }
@@ -251,11 +277,9 @@ export default {
         return
       }
       if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
-        // console.log('++')
         this.currentIndex++
       } else {
         if (scrollTop < this.listHeight[this.currentIndex]) {
-          // console.log('--')
           this.currentIndex--
         }
       }
@@ -275,12 +299,25 @@ export default {
     .menu-category
       flex 0 0 25%
       .menu-category-item
+        position relative
         font-size $font-size-medium
         padding 4.666667vw 2vw
         background-color  $color-highlight-background
         &.active-category
           background-color $color-background
           font-weight bold
+        .count-tip
+          position absolute
+          display inline-block
+          top 0.333333vw
+          right 0.333333vw
+          border-radius 50%
+          background #ff4b15
+          width 3.333333vw
+          height 3.333333vw
+          line-height 3.333333vw
+          text-align center
+          font-size $font-size-small-xs
     .menu-list
       flex 1
       overflow hidden

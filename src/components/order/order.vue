@@ -1,6 +1,6 @@
 <template>
   <div class="order">
-    order
+    敬请期待~
   </div>
 </template>
 

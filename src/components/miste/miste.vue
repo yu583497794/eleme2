@@ -13,6 +13,7 @@
         <li v-for="(recommend, index) in recommends" :key="index" class="recommend-item" @click="enter(recommend)">
           <div class="icon">
             <img width="100%" height="100%" v-lazy="recommend.image_path">
+            <span class="cart-count-tip" v-if="cartCount[index] > 0">{{cartCount[index]}}</span>
           </div>
           <div class="desc">
             <div class="part-one">
@@ -71,7 +72,7 @@ import Banner from 'base/banner/banner'
 import Star from 'base/star/star'
 import {EventUtil} from 'common/js/dom-util'
 import Loading from 'base/loading/loading'
-import {mapMutations} from 'vuex'
+import {mapMutations, mapGetters} from 'vuex'
 const nameMap = new Map()
   .set('首', 'first')
   .set('减', 'decrease')
@@ -177,7 +178,22 @@ export default {
   computed: {
     isLoading () {
       return this.loading
-    }
+    },
+    cartCount () {
+      let list = []
+      this.recommends.forEach((seller, index) => {
+        list[index] = 0
+        this.cartList.forEach(item => {
+          if (item.seller === seller.id) {
+            list[index] += item.count
+          }
+        })
+      })
+      return list
+    },
+    ...mapGetters([
+      'cartList'
+    ])
   },
   components: {
     Banner,
@@ -230,9 +246,20 @@ export default {
         padding 20px 10px
         .icon
           flex none
+          position relative
           margin-right 8px
           width 20vw
           height 20vw
+          .cart-count-tip
+            position absolute
+            min-width 3.733333vw
+            line-height 3.733333vw
+            font-size $font-size-small
+            background #ff4b15
+            text-align center
+            border-radius 50%
+            top -1.333333vw
+            right -1.333333vw
         .desc
           flex 1
           display flex

@@ -1,16 +1,18 @@
 <template>
   <div class="cart" @click.stop>
-    <div class="active-tip">满22减4元，满30减8元，满45减15元???</div>
+    <div class="background" v-if="showCartList" @click="toggleCartList"></div>
+    <!-- 待优化 待实现 -->
+    <!-- <div class="active-tip">满22减4元，满30减8元，满45减15元???</div> -->
     <div class="cart-list" v-if="showCartList">
       <div class="cart-list-title">
         <span>已选商品</span>
-        <div class="clear">
+        <div class="clear" @click.stop="clear">
           <icon name="clear" scale="1.2"></icon>
           <span>清空</span>
         </div>
       </div>
       <ul class="cart-list-main">
-        <li class="cart-item" v-for="(item, index) in cartList" :key="index">
+        <li class="cart-item" v-for="(item, index) in cartList" v-if="item.seller === $route.params.id" :key="index">
           <div class="item-inf">
             <p class="name">{{item.name}}</p>
             <p class="spec-attr">{{item.spec}}{{item.attr}}</p>
@@ -55,7 +57,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 import CartButton from 'base/cart-button/cart-button'
 export default {
   name: 'cart',
@@ -68,15 +70,18 @@ export default {
     totalCount () {
       let count = 0
       this.cartList.forEach(item => {
-        count += item.count
+        if (item.seller === this.$route.params.id) {
+          count += item.count
+        }
       })
-      console.log(this.cartList)
       return count
     },
     totalMoney () {
       let money = 0
       this.cartList.forEach(item => {
-        money += item.count * item.price
+        if (item.seller === this.$route.params.id) {
+          money += item.count * item.price
+        }
       })
       return money
     },
@@ -90,7 +95,24 @@ export default {
   },
   methods: {
     toggleCartList () {
+      if (this.totalCount === 0) {
+        this.showCartList = false
+        return
+      }
       this.showCartList = !this.showCartList
+    },
+    clear () {
+      this.clearSellerCart(this.$route.params.id)
+    },
+    ...mapMutations({
+      clearSellerCart: 'CLEAR_SELLER_CART'
+    })
+  },
+  watch: {
+    totalCount (newVal) {
+      if (newVal === 0) {
+        this.showCartList = false
+      }
     }
   },
   components: {
@@ -107,6 +129,15 @@ export default {
     left 0
     right 0
     background-color #505051
+    z-index 1
+    .background
+      position fixed
+      top 0
+      bottom 0
+      right 0
+      left 0
+      background rgba(0, 0, 0, 0.5)
+      z-index -1
     .active-tip
       line-height 5.333333vw
       font-size $font-size-small
@@ -145,6 +176,9 @@ export default {
             flex 1.5
             display flex
             justify-content flex-end
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
           .cart-button-wrapper
             flex 2.5
             display flex
