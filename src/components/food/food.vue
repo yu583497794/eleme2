@@ -47,7 +47,7 @@
             </li>
           </ul>
         </li>
-        <li class="food-tip">没有更多了~</li>
+        <li class="food-tip" v-if="initReady">没有更多了~</li>
       </ul>
     </div>
     <div ref="fixed-category"  id="fixed-category" class="fixed-category">
@@ -95,7 +95,8 @@ export default {
       fixed: false,
       listHeight: [],
       currentIndex: 0,
-      selectedFood: {}
+      selectedFood: {},
+      initReady: false
     }
   },
   props: {
@@ -285,6 +286,9 @@ export default {
       }
     })
     this._initFixedCategory()
+    setTimeout(() => {
+      this.initReady = true
+    }, 1000)
   },
   components: {
     CartButton
@@ -296,6 +300,7 @@ export default {
 @import '~common/stylus/variable'
   .food
     display flex
+    min-height 200vw
     .menu-category
       flex 0 0 25%
       .menu-category-item

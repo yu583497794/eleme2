@@ -339,7 +339,7 @@ export default {
         .specpanel-body
           display flex
           flex-direction column
-          max-height 106.666667vw
+          max-height 146.666667vw
           overflow-y scroll
           .specpanel-main
             margin 2.333333vw 0
