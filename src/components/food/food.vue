@@ -184,6 +184,7 @@ export default {
         return
       }
       this.currentIndex = index
+      // 事件:滚动到菜单指定位置
       window.eventBus.$emit('scrollToCat', this.listHeight[index])
     },
     selectFood (food) {
@@ -192,6 +193,26 @@ export default {
     closeDetail () {
       this.selectedFood = {}
     }
+    // foodScrollHandler (scrollTop) {
+    //   if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
+    //     // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
+    //     let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
+    //     if (this.diff === diff) {
+    //       return
+    //     }
+    //     this.diff = diff
+    //     const category = document.getElementById('fixed-category')
+    //     category.style.transform = `translate3d(0, -${diff}px, 0)`
+    //     return
+    //   }
+    //   if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
+    //     this.currentIndex++
+    //   } else {
+    //     if (scrollTop < this.listHeight[this.currentIndex]) {
+    //       this.currentIndex--
+    //     }
+    //   }
+    // }
   },
   computed: {
     fixedCategoryName () {
@@ -246,6 +267,9 @@ export default {
   },
   created () {
     window.eventBus.$on('eventFixed', (flag, height) => {
+      if (this.$route.path.split('/').pop() !== 'menu') {
+        return
+      }
       this.top = height
       this.fixed = flag
       if (this.fixed) {
@@ -266,6 +290,9 @@ export default {
     })
     EventUtil.addHandler(this.$refs.menu, 'scroll', this.scrollHandler)
     window.eventBus.$on('foodScroll', (scrollTop) => {
+      if (this.$route.path.split('/').pop() !== 'menu') {
+        return
+      }
       if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
         // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
         let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
@@ -293,6 +320,11 @@ export default {
   components: {
     CartButton
   }
+  // activated () {
+  //   console.log('???')
+  //   window.eventBus.$on('foodScroll', this.foodScrollHandler)
+  //   console.log(window.eventBus)
+  // }
 }
 </script>
 

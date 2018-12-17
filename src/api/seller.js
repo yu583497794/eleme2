@@ -6,7 +6,29 @@ export function getMenu (id) {
     'restaurant_id': id,
     'terminal': 'web'
   })
-  return axios('/api/menu', {
+  return axios.get('/api/menu', {
+    params: data
+  })
+}
+
+export function getRating (id, limit = 10, offset = 0, record_type = 0) {
+  const data = {
+    offset,
+    limit,
+    record_type,
+    id
+  }
+  return axios.get('/api/rating', {
+    params: data
+  })
+}
+export function getRatingOverview (id) {
+  const data = {
+    latitude: 30.515977,
+    longitude: 114.414724,
+    id
+  }
+  return axios.get('/api/rating-overview', {
     params: data
   })
 }
