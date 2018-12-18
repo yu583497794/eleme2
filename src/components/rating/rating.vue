@@ -40,13 +40,13 @@
               <span  class="text">{{ratingWords(rating.rating_star)}}</span>
             </section>
             <p class="text">{{rating.rating_text}}</p>
-            <section class="part-reply" v-if="rating.reply_text.length !== 0">
+            <section class="part-reply" v-if="rating.reply_text && rating.reply_text.length !== 0">
               <p class="reply">商家回复:{{rating.reply_text}}</p>
             </section>
-            <section class="part-image" v-if="rating.item_rating_list[0].image_hash.length > 0">
-              <img :src="getAvatar(rating.item_rating_list[0].image_hash)">
+            <section class="part-image" v-if="rating.item_rating_list && rating.item_rating_list.length > 0 && getPic(rating.item_rating_list).length > 0">
+              <img :src="getPic(rating.item_rating_list)">
             </section>
-            <section class="part-food" v-if="rating.item_rating_list.length > 0">
+            <section class="part-food" v-if="rating.item_rating_list && rating.item_rating_list.length > 0">
               <ul>
                 <span class="good-icon"><icon name="good" scale="2"></icon></span>
                 <li v-for="(item, index) in rating.item_rating_list"
@@ -56,6 +56,7 @@
             </section>
           </div>
         </li>
+        <loading v-show="loading"></loading>
       </ul>
     </div>
   </div>
@@ -66,6 +67,7 @@ import {mapGetters} from 'vuex'
 import {getRating, getRatingOverview} from 'api/seller'
 import Star from 'base/star/star'
 import {extraUrl} from 'common/js/banner'
+import Loading from 'base/loading/loading'
 const ratingWordsList = ['超赞', '满意', '一般', '失望', '极差']
 export default {
   name: 'rating',
@@ -75,7 +77,8 @@ export default {
       limit: 10,
       ratingOverview: {},
       recordType: 0,
-      offset: 0
+      offset: 0,
+      loading: false
     }
   },
   methods: {
@@ -91,6 +94,16 @@ export default {
       } else {
         return extraUrl(path)
       }
+    },
+    getPic (list) {
+      let url = ''
+      list.forEach(path => {
+        if (path.image_hash.length > 0) {
+          url = extraUrl(path)
+          return true
+        }
+      })
+      return url
     },
     ratingWords (scroll) {
       let index = 5 - scroll
@@ -120,16 +133,26 @@ export default {
     ])
   },
   components: {
-    Star
+    Star,
+    Loading
   },
   created () {
     getRating(this.seller.id, this.limit).then((res) => {
       this.ratings = res.data
-      console.log(this.ratings)
+      this.offset = this.ratings.length
     })
     getRatingOverview(this.seller.id).then((res) => {
       this.ratingOverview = res.data
       console.log(this.ratingOverview)
+    })
+    window.eventBus.$on('loadMore', () => {
+      this.loading = true
+      getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
+        // this.ratings = this.ratings.concat(res.data)
+        this.ratings.push(...res.data)
+        this.offset = this.ratings.length
+        this.loading = false
+      })
     })
   }
 }

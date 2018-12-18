@@ -114,6 +114,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       app.get('/api/rating', (req, res) => {
         const id = req.query.id
         var url = `https://www.ele.me/restapi/ugc/v1/restaurant/${id}/ratings`
+        // var url = `https://elm.cangdu.org/ugc/v2/restaurants/${id}/ratings`
         delete req.id
         // console.log(req.query)
         return axios.get(url, {
