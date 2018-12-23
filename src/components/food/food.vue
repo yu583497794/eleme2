@@ -113,7 +113,7 @@ export default {
           minPrice = spec.price
         }
       })
-      return minPrice
+      return minPrice.toFixed(2)
       // if (food.specifications.length !== 0) {
       //   console.log('spec')
       //   food.specfoods.forEach((spec) => {

@@ -3,7 +3,7 @@
     <div class="rating-overview">
       <div class="overview overview-left">
         <section class="part-left">
-          <p>{{ratingOverview.star_level}}</p>
+          <p>{{ratingOverview.star_level.toFixed(1)}}</p>
         </section>
         <section class="part-right">
           <span>商家评分</span>

@@ -15,6 +15,8 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 var express= require('express')
 var axios = require('axios')
 const app = express()
+var restaurants = require('../restaurants.json')
+console.log(restaurants)
 var apiRoutes = express.Router()
 app.use('/api', apiRoutes)
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -48,6 +50,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       poll: config.dev.poll,
     },
     before (app) {
+      // app.get('/api/login', function (req, res) {
+      //   let url = 'https://www.ele.me/restapi/eus/v1/current_user'
+      //   axios.get(url, {
+      //     params: req.query,
+      //     headers: {
+      //       referer: 'https://www.ele.me/place/wt3mee622q3t?latitude=30.515977&longitude=114.414724'
+      //     }
+      //   }).then(response => {
+      //     console.log(response)
+      //     console.log('?????????????????????????')
+      //     res.json([])
+      //   }).catch(e => {
+      //     console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+      //     // console.log(e)
+      //   })
+      // })
       app.get('/api/banners', function (req, res) {
         var url = "https://h5.ele.me/restapi/shopping/v2/banners"
         axios.get(url, {
@@ -80,20 +98,27 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       //   })
       // })
       app.get('/api/recommends', (req, res) => {
-        var url = 'https://www.ele.me/restapi/shopping/restaurants'
-        axios.get(url, {
-          params: req.query,
-          headers: {
-            referer: 'https://www.ele.me/place/wt3mee622q3t?latitude=30.515977&longitude=114.4',
-            'x-shard': 'loc = 114.410972, 30.507451',
-            // cookie: 'ubt_ssid=95v6uzys9ipnc2spzukt2u19cxa3l4c2_2018-09-19; perf_ssid=f1h6h8jbln6zq9fh07nwzmrqmymfnjh6_2018-09-19; _utrace=b6c9430cb5118e4440d6ec720e4ec55c_2018-09-19; USERID=988249458; SID=6xyqKNYyImThX1eolo3vHD1AbwryQXQWEnyg; track_id=1537327981%7Cc485d4a2c14df058d75c84fd3d88f5dd3d6d9a999deaabdef2%7C353d4ef6f95dffc64257c8250762e485; cna=0fgDFEKVm2UCAdNFxTWSOPgr; isg=BEFBvfFL_m24UBIIVa6GfUIEUI2IK3BVLNJN8qOWPMinimBc675PN1nLaPjMsU2Y',
-            // 'user-agent': 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Mobile Safari/537.36'
-          }
-        }).then((response) => {
-          res.json(response.data)
-        }).catch((e) => {
-          res.json([])
-        })
+        // 登陆问题
+        // var url = 'https://www.ele.me/restapi/shopping/restaurants'
+        // axios.get(url, {
+        //   params: req.query,
+        //   headers: {
+        //     referer: 'https://www.ele.me/place/wt3mee622q3t?latitude=30.515977&longitude=114.4',
+        //     'x-shard': 'loc = 114.410972, 30.507451',
+        //     // cookie: 'ubt_ssid=95v6uzys9ipnc2spzukt2u19cxa3l4c2_2018-09-19; perf_ssid=f1h6h8jbln6zq9fh07nwzmrqmymfnjh6_2018-09-19; _utrace=b6c9430cb5118e4440d6ec720e4ec55c_2018-09-19; USERID=988249458; SID=6xyqKNYyImThX1eolo3vHD1AbwryQXQWEnyg; track_id=1537327981%7Cc485d4a2c14df058d75c84fd3d88f5dd3d6d9a999deaabdef2%7C353d4ef6f95dffc64257c8250762e485; cna=0fgDFEKVm2UCAdNFxTWSOPgr; isg=BEFBvfFL_m24UBIIVa6GfUIEUI2IK3BVLNJN8qOWPMinimBc675PN1nLaPjMsU2Y',
+        //     // 'user-agent': 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Mobile Safari/537.36'
+        //   }
+        // }).then((response) => {
+        //   res.json(response.data)
+        //   console.log(response.data)
+        // }).catch((e) => {
+        //   console.log(e)
+        //   res.json([])
+        // })
+        let from = req.query.offset
+        let to = parseInt(from) + parseInt(req.query.limit)
+        let response = restaurants.slice(from, to)
+        res.json(response)
       })
       app.get('/api/menu', (req, res) => {
         var url = 'https://www.ele.me/restapi/shopping/v2/menu'

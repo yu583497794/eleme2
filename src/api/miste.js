@@ -39,7 +39,6 @@ export function getBanners () {
 //     params: data
 //   })
 // }
-
 export function getRecommends (offset = 0, limit = 8, other = {}) {
   const data = Object.assign({}, {
     latitude: 30.507451,
@@ -56,3 +55,12 @@ export function getRecommends (offset = 0, limit = 8, other = {}) {
     params: data
   })
 }
+
+// export function login () {
+//   const data = Object.assign({}, {
+//     info_raw: {}
+//   })
+//   return axios.get('/api/login', {
+//     params: data
+//   })
+// }

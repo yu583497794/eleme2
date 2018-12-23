@@ -17,7 +17,7 @@
             <p class="name">{{item.name}}</p>
             <p class="spec-attr">{{item.spec}}{{item.attr}}</p>
           </div>
-          <div class="price">¥{{item.price * item.count}}</div>
+          <div class="price">¥{{(item.price * item.count).toFixed(2)}}</div>
           <div class="cart-button-wrapper">
             <cart-button :food="item" :direct=true></cart-button>
           </div>
@@ -83,7 +83,7 @@ export default {
           money += item.count * item.price
         }
       })
-      return money
+      return money.toFixed(2)
     },
     banlance () {
       return this.seller.float_minimum_order_amount - this.totalMoney
