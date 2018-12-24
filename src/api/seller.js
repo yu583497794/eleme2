@@ -32,3 +32,14 @@ export function getRatingOverview (id) {
     params: data
   })
 }
+export function getQualification (id) {
+  const data = {
+    latitude: 30.515977,
+    longitude: 114.414724,
+    terminal: 'h5',
+    id
+  }
+  return axios.get('/api/qualification', {
+    params: data
+  })
+}

@@ -86,7 +86,7 @@ export default {
       return money.toFixed(2)
     },
     banlance () {
-      return this.seller.float_minimum_order_amount - this.totalMoney
+      return (this.seller.float_minimum_order_amount - this.totalMoney).toFixed(2)
     },
     ...mapGetters([
       'cartList',

@@ -18,7 +18,7 @@
         <section><span class="title">好评率</span><p class="text">{{ratingOverview.positive_rating*100}}%</p></section>
       </div>
     </div>
-    <div class="rating-list-wrapper">
+    <div class="rating-list-wrapper" v-if="errno">
       <div class="rating-filter">
         <div class="rating-filter-item" @click="filter(1)">全部</div>
         <div class="rating-filter-item" @click="filter(2)">满意</div>
@@ -59,6 +59,10 @@
         <loading v-show="loading"></loading>
       </ul>
     </div>
+    <div class="unattach" v-if="!errno">
+      <p>饿了么不给接口,我也很无奈啊</p>
+      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545653225553&di=4bf80892b7650615eaf8a248d97e5bba&imgtype=0&src=http%3A%2F%2Fimg.tukexw.com%2Fimg%2F043ad3b9b04603a7.jpg">
+    </div>
   </div>
 </template>
 
@@ -78,7 +82,8 @@ export default {
       ratingOverview: {},
       recordType: 0,
       offset: 0,
-      loading: false
+      loading: false,
+      errno: false
     }
   },
   methods: {
@@ -122,8 +127,10 @@ export default {
     recordType (newVal) {
       this.offset = 0
       getRating(this.seller.id, this.limit, this.offset, this.recordType).then(res => {
-        this.ratings = res.data
-        console.log(this.ratings)
+        if (res.errno) {
+          this.ratings = res.data
+          this.errno = true
+        }
       })
     }
   },
@@ -278,4 +285,10 @@ export default {
                 text-overflow ellipsis
                 white-space nowrap
                 margin 0.666667vw
+    .unattach
+      background $color-background
+      padding 2.3333vw
+      text-align center
+      p
+        margin-bottom 1.666667vw
 </style>

@@ -45,7 +45,7 @@ export function getRecommends (offset = 0, limit = 8, other = {}) {
     longitude: 114.410972,
     offset,
     limit,
-    extras: ['activities', 'tags'],
+    extras: ['activities', 'tags', 'albums', 'license', 'identification', 'qualification'],
     // extra_filters: 'home',
     // rank_id: offset === 0 ? '' : 'b2d76784c48b4a95965886ad72ab5e9c',
     terminal: 'web',

@@ -21,7 +21,6 @@ export default {
     _getMenu () {
       getMenu(this.seller.id).then((res) => {
         this.menuList = res.data
-        console.log(res)
       })
     }
   },

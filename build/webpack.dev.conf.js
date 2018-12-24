@@ -151,9 +151,17 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           }
         }).then((response) => {
           console.log(response)
+          response = Object.assign(response.data, {
+            errno: true
+          })
           res.json(response.data)
         }).catch((e) => {
           console.log(e)
+          const response = {
+            errno: false,
+            message: '不给我接口,我也很无奈啊~'
+          }
+          res.json(response)
         })
       })
       app.get('/api/rating-overview', (req, res) => {
@@ -169,6 +177,26 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           params: req.query
         }).then((response) => {
           res.json(response.data)
+        })
+      })
+      app.get('/api/qualification', (req, res) => {
+        const url = `https://h5.ele.me/restapi/shopping/v1/restaurants/${req.query.id}/business/qualification`
+        delete req.query.id
+        axios.get(url, {
+          params: req.query,
+          headers: {
+            referer: 'https://h5.ele.me/shop/certification/',
+            'x-shard': 'loc=114.414724,30.515977'
+          }
+        }).then((response) => {
+          console.log(response)
+          res.json(response.data)
+        }).catch(e => {
+          const response = Object.assign({}, e.data, {
+            images: ["b65be36c9540d3963d49b583a182229fjpeg", "1514dce1b89136537dab5725d558741bjpeg"]
+          })
+          console.log(response)
+          res.json(response)
         })
       })
     }

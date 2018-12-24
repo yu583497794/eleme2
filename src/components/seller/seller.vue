@@ -148,7 +148,6 @@ export default {
     scrollHandler (event) {
       const clientHeightDiff = document.documentElement.clientHeight + 1
       if (Math.abs(event.target.scrollHeight - event.target.scrollTop) < clientHeightDiff) {
-        console.log('!!!')
         window.eventBus.$emit('loadMore')
       }
       if (!this.fixed && event.target.scrollTop >= this.fixHeight) {
@@ -211,7 +210,6 @@ export default {
       // const offsetHeight = this.fixHeight + this.tabHeight
       this.scrollTo(height + this.fixHeight)
     })
-    console.log(this.seller)
   },
   watch: {
     '$route' (to, from) {
