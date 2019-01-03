@@ -19,6 +19,7 @@ export default {
   },
   methods: {
     _getMenu () {
+      console.log(this.seller.id)
       getMenu(this.seller.id).then((res) => {
         this.menuList = res.data
       })

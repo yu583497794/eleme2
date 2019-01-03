@@ -1,9 +1,10 @@
 <template>
   <div class="miste" id="miste">
-    <div class="head">
+    <!-- <div class="head">
       <icon name="girl" scale="6" class="head-icon"></icon>
       <h1 class="title">Fairy Eleme</h1>
-    </div>
+    </div> -->
+    <eleme-head></eleme-head>
     <div class="banner-wrapper">
       <banner :banners="banners"></banner>
     </div>
@@ -73,6 +74,7 @@ import Star from 'base/star/star'
 import {EventUtil} from 'common/js/dom-util'
 import Loading from 'base/loading/loading'
 import {mapMutations, mapGetters} from 'vuex'
+import ElemeHead from 'base/eleme-head/eleme-head'
 const nameMap = new Map()
   .set('首', 'first')
   .set('减', 'decrease')
@@ -198,7 +200,8 @@ export default {
   components: {
     Banner,
     Star,
-    Loading
+    Loading,
+    ElemeHead
   }
 }
 </script>
@@ -214,19 +217,6 @@ export default {
   overflow-y auto
   overflow-x hidden
   font-size $font-size-small
-  .head
-    height 60px
-    font-size 0
-    text-align center
-    background-color $color-background-d
-    .title
-      display inline-block
-      font-size $font-size-large-x
-      line-height 60px
-      vertical-align top
-      margin-left 10px
-      color $color-theme
-      background-color $color-background
   .recommend-shops
     width 100%
     .title

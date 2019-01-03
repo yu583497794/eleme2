@@ -92,7 +92,7 @@ export default {
     return {
       qualFlag: false,
       qualification: {},
-      scence: ['http://pic.qiantucdn.com/58pic/15/67/91/74D58PICkXG_1024.jpg!/fw/1024/watermark/url/L2ltYWdlcy93YXRlcm1hcmsveGlhb3R1LnBuZw==/align/center',
+      scence: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546406676904&di=ed67c5179fbc1948487e44f34070e173&imgtype=0&src=http%3A%2F%2Fpic.tugou.com%2Fmeitu_gather%2F1456980853_8516727.jpg',
         'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545648703745&di=4509b9d5a8f598cabedcd15f8f99cb25&imgtype=0&src=http%3A%2F%2Fpic2bj.shejibao.com%2Fimg%2F2016%2F07%2F04%2F46a469e6b064d0dafa16d05797ef8113.jpg%40%2521width_800',
         'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545648703744&di=52cf2468752e9a95ff0a9fe3facc08df&imgtype=0&src=http%3A%2F%2Fpic2bj.shejibao.com%2Fimg%2F2016%2F07%2F05%2Fd383b6347efe0a56c7a8e6374f81acc6.jpg%40%2521width_800'
       ]

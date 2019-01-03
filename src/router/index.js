@@ -90,7 +90,7 @@ export default new Router({
     },
     {
       path: '/profile',
-      compnent: Profile
+      component: Profile
     }
   ]
 })

@@ -32,6 +32,24 @@ export const EventUtil = {
       return event.srcElement
     }
   },
+  getCharCode: (event) => {
+    if (typeof event.charCode === 'number') {
+      return event.charCode // 按下那个键的所代表字符的ASCII编码
+    } else {
+      return event.keyCode
+    }
+  },
+  getClipboardText: (event) => {
+    var clipboardData = event.clipboardData || window.clipboardData
+    return clipboardData.getData('text')
+  },
+  setClipboardText: (event, value) => {
+    if (event.clipboardData) {
+      return event.clipboardData.setData('text/plain', value)
+    } else if (window.clipboradData) {
+      return window.clipboradData.setData('text', value)
+    }
+  },
   prevent: (event) => {
     if (event.preventDefault) {
       event.preventDefault()
