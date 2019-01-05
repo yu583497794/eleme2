@@ -43,6 +43,16 @@ const SellerDetail = (resolve) => {
     resolve(module)
   })
 }
+const Register = (resolve) => {
+  import('components/register/register').then((module) => {
+    resolve(module)
+  })
+}
+const Login = (resolve) => {
+  import('components/login/login').then((module) => {
+    resolve(module)
+  })
+}
 export default new Router({
   routes: [
     {
@@ -90,7 +100,22 @@ export default new Router({
     },
     {
       path: '/profile',
-      component: Profile
+      component: Profile,
+      children: [
+        {
+          path: '',
+          redirect: 'login',
+          component: Login
+        },
+        {
+          path: 'login',
+          component: Login
+        },
+        {
+          path: 'register',
+          component: Register
+        }
+      ]
     }
   ]
 })

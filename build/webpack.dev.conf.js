@@ -16,7 +16,7 @@ var express= require('express')
 var axios = require('axios')
 const app = express()
 var restaurants = require('../restaurants.json')
-console.log(restaurants)
+// console.log(restaurants)
 var apiRoutes = express.Router()
 app.use('/api', apiRoutes)
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -121,20 +121,24 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         res.json(response)
       })
       app.get('/api/menu', (req, res) => {
-        var url = 'https://www.ele.me/restapi/shopping/v2/menu'
-        axios.get(url, {
-          params: req.query,
-          headers: {
-            referer: 'https://www.ele.me/' + req.query.restaurant_id,
-            'x-shard': `shopid=${req.query.restaurant_id};loc=114.414724,30.515977`,
-            scheme: 'https'
-          }
-        }).then((response) => {
-          console.log(response)
-          res.json(response.data)
-        }).catch((e) =>{
-          console.log(e)
-        })
+        let url = `./data/menu/${req.query.restaurant_id}.json`
+        console.log(url)
+        let menu = require(url)
+        res.json(menu)
+        // var url = 'https://www.ele.me/restapi/shopping/v2/menu'
+        // axios.get(url, {
+        //   params: req.query,
+        //   headers: {
+        //     referer: 'https://www.ele.me/' + req.query.restaurant_id,
+        //     'x-shard': `shopid=${req.query.restaurant_id};loc=114.414724,30.515977`,
+        //     scheme: 'https'
+        //   }
+        // }).then((response) => {
+        //   console.log(response)
+        //   res.json(response.data)
+        // }).catch((e) =>{
+        //   console.log(e)
+        // })
       })
       app.get('/api/rating', (req, res) => {
         const id = req.query.id
