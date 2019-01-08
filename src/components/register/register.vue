@@ -1,23 +1,23 @@
 <template>
   <div class="register">
-    <form id="register-form">
+    <form id="register-form" method="POST">
       <div class="input-fill-x">
-        <input type="text" id="username" class="input-control input-fill" placeholder="6~18个字符(汉字、字母、数字、下划线),设置后不可改">
+        <input type="text" name="username" id="username" class="input-control input-fill" placeholder="6~18个字符(汉字、字母、数字、下划线),设置后不可改" v-model="form.name">
         <label class="input-label" for="username">昵称</label>
         <div class="tip" v-if="usernameError.length > 0">{{usernameError}}</div>
       </div>
       <div class="input-fill-x">
-        <input type="email" id="email" class="input-control input-fill" placeholder="请输入您的邮箱地址">
+        <input type="email" name="email" id="email" class="input-control input-fill" placeholder="请输入您的邮箱地址" v-model="form.email">
         <label class="input-label" for="email">邮箱</label>
         <div class="tip" v-if="emailError.length > 0">{{emailError}}</div>
       </div>
       <div class="input-fill-x">
-        <input type="password" id="password" class="input-control input-fill" placeholder="长度为8-16位字符,区分大小写">
+        <input type="password" name="password" id="password" class="input-control input-fill" placeholder="长度为8-16位字符,区分大小写" v-model="form.pass">
         <label class="input-label" for="password">密码</label>
         <div class="tip" v-if="passwordError.length > 0">{{passwordError}}</div>
       </div>
       <div class="input-fill-x">
-        <input type="password" id="password-again" class="input-control input-fill" placeholder="请再一次输入密码">
+        <input type="password" id="password-again" class="input-control input-fill" placeholder="请再一次输入密码" v-model="form.checkPass">
         <label class="input-label" for="password-again">确认密码</label>
         <div class="tip" v-if="passwordAgainError.length > 0">{{passwordAgainError}}</div>
       </div>
@@ -26,7 +26,8 @@
         <label class="input-label">昵称</label>
       </div> -->
       <div class="login-submit-x">
-        <input type="submit" value="注册" :class="loginOk" class="login-submit">
+        <!-- <input type="submit" value="注册" :class="loginOk" class="login-submit" @click="onSubmit('form')"> -->
+        <div class="login-submit" :class="loginOk" id="register-submit" @click="onSubmit('form')">注册</div>
       </div>
     </form>
   </div>
@@ -47,7 +48,12 @@ export default {
       emailError: '',
       passwordError: '',
       passwordAgainError: '',
-      register: {},
+      form: {
+        name: '',
+        pass: '',
+        checkPass: '',
+        email: ''
+      },
       success: new Array(INPUT_NUM).fill(0)
     }
   },
@@ -69,7 +75,7 @@ export default {
           this.usernameError = '使用了非法字符'
         } else {
           this.usernameError = ''
-          this.register.username = text
+          // this.register.username = text
           if (!this.success[USERNAME_INDEX]) {
             this.success[USERNAME_INDEX] = 1
             this.success = this.success.slice(0)
@@ -94,7 +100,7 @@ export default {
         this.emailError = '非法的邮箱地址'
       } else {
         this.emailError = ''
-        this.register.email = text
+        // this.register.this.register.email = text
         if (this.success[EMAIL_INDEX]) {
           return
         } else {
@@ -118,13 +124,13 @@ export default {
       }
       if (/^.{8,16}$/.test(text)) {
         this.passwordError = ''
-        this.register.password = text
+        // this.register.password = text
         if (!this.success[PASSWORD_INDEX]) {
           this.success[PASSWORD_INDEX] = 1
           this.success = this.success.slice()
         }
-        if (this.register.passwordAgain && this.register.passwordAgain.length > 0) {
-          if (this.register.password !== this.register.passwordAgain) {
+        if (this.form.checkPass && this.form.checkPass.length > 0) {
+          if (this.form.pass !== this.form.checkPass) {
             this.passwordAgainError = '两次密码不一致'
             if (this.success[PASSWORD_AGAIN_INDEX]) {
               this.success[PASSWORD_AGAIN_INDEX] = 0
@@ -154,11 +160,11 @@ export default {
         this.passwordAgainError = ''
         return
       }
-      this.register.passwordAgain = text
-      if (this.register.passwordAgain && this.register.passwordAgain.length > 0) {
-        if (this.register.password === this.register.passwordAgain) {
+      // this.register.passwordAgain = text
+      if (this.form.checkPass && this.form.checkPass.length > 0) {
+        if (this.form.pass === this.form.checkPass) {
           this.passwordAgainError = ''
-          this.register.passwordAgain = text
+          // this.form.checkPass = text
           if (!this.success[PASSWORD_AGAIN_INDEX]) {
             this.success[PASSWORD_AGAIN_INDEX] = 1
             this.success = this.success.slice(0)
@@ -171,6 +177,23 @@ export default {
       if (this.success[PASSWORD_AGAIN_INDEX]) {
         this.success[PASSWORD_AGAIN_INDEX] = 0
         this.success = this.success.slice(0)
+      }
+    },
+    onSubmit (form) {
+      if (!this.success.some(item => {
+        return !item
+      })) {
+        this.$http.post('/api/user/addUser', JSON.stringify(this.form), {
+          emulateJSON: true
+        }).then(function (response) {
+          let button = document.getElementById('register-submit')
+          button.innerText = '注册成功'
+          this.$router.push({
+            path: '/profile/login'
+          })
+        }).catch(function (err) {
+          console.log(err)
+        })
       }
     }
   },

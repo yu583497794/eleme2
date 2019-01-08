@@ -7,6 +7,7 @@ import router from './router'
 import store from './store'
 import Icon from 'vue-svg-icon/Icon.vue'
 import VueLazyLoad from 'vue-lazyload'
+import resource from './resource/index'
 import 'common/stylus/index.styl'
 Vue.config.productionTip = false
 Vue.component('icon', Icon)
@@ -18,6 +19,7 @@ window.eventBus = new Vue()
 new Vue({
   el: '#app',
   router,
+  resource,
   store,
   render: h => h(App)
 })

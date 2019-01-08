@@ -53,6 +53,11 @@ const Login = (resolve) => {
     resolve(module)
   })
 }
+const UserCenter = (resolve) => {
+  import('components/user-center/user-center').then(module => {
+    resolve(module)
+  })
+}
 export default new Router({
   routes: [
     {
@@ -102,11 +107,11 @@ export default new Router({
       path: '/profile',
       component: Profile,
       children: [
-        {
-          path: '',
-          redirect: 'login',
-          component: Login
-        },
+        // {
+        //   path: '',
+        //   redirect: 'login',
+        //   component: Login
+        // },
         {
           path: 'login',
           component: Login
@@ -114,6 +119,10 @@ export default new Router({
         {
           path: 'register',
           component: Register
+        },
+        {
+          path: 'user-center',
+          component: UserCenter
         }
       ]
     }

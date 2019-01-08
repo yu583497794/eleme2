@@ -29,6 +29,19 @@ const mutation = {
       }
     })
     state.cartList = list
+  },
+  [types.SET_LOGINED] (state) {
+    state.logined = true
+  },
+  [types.REMOVE_LOGINED] (state) {
+    state.logined = false
+  },
+  [types.SET_FAVORITE] (state, list) {
+    console.log(list)
+    state.user.favorite = list
+  },
+  [types.SET_USER] (state, user) {
+    state.user = user
   }
 }
 

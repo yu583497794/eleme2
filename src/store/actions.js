@@ -1,4 +1,5 @@
 import * as types from './mutation-types'
+import {loadFavorite, saveFavorite, deleteFavorite} from 'common/js/cache'
 function findIndex (foodList, food) {
   let i = -1
   foodList.forEach((item, index) => {
@@ -27,4 +28,32 @@ export const minusFoodAction = function ({commit, state}, food) {
     return
   }
   commit(types.MINUS_FOOD_COUNT, i)
+}
+
+export const loginAction = function ({commit, state}, user) {
+  // state.user.id = user.id
+  // state.user.favorite = loadFavorite(user.id)
+  // console.log('load:' + loadFavorite(user.id))
+  // console.log(loadFavorite(user.id))
+  commit(types.SET_USER, {
+    id: user.id,
+    favorite: loadFavorite(user.id)
+  })
+  commit(types.SET_LOGINED)
+}
+
+export const logoutAction = function ({commit, state}) {
+  // state.user.id = 0
+  // state.user.favorite = []
+  commit(types.SET_USER, {
+    id: 0,
+    favorite: []
+  })
+  commit(types.REMOVE_LOGINED)
+}
+export const pushFavorite = function ({commit}, {id, seller}) {
+  commit(types.SET_FAVORITE, saveFavorite(id, seller))
+}
+export const popFavorite = function ({commit}, {id, seller}) {
+  commit(types.SET_FAVORITE, deleteFavorite(id, seller))
 }

@@ -9,6 +9,9 @@
         </div>
         <div class="desc">
           <h2 class="name">
+            <span class="favorite"  v-if="logined" @click="toggleFavorite">
+              <icon scale="2" :name="isFavorite ? 'favorite' : 'unfavorite'" fill="#ffcd32"></icon>
+            </span>
             <span class="name-text">{{seller.name}}</span>
             <span class="enter" @click="toggleDetail('seller')">
               <icon name="enter" scale="2" class="enter"></icon>
@@ -100,7 +103,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import Tab from 'components/tab/tab'
 import {EventUtil} from 'common/js/dom-util'
 const nameMap = new Map()
@@ -168,7 +171,25 @@ export default {
     scrollTo (height) {
       let seller = document.getElementById('seller')
       seller.scrollTo(0, height)
-    }
+    },
+    toggleFavorite () {
+      if (this.isFavorite) {
+        this.popFavorite({
+          id: this.user.id,
+          seller: this.seller
+        })
+      } else {
+        this.pushFavorite({
+          id: this.user.id,
+          seller: this.seller
+        })
+      }
+      console.log('finish')
+    },
+    ...mapActions([
+      'pushFavorite',
+      'popFavorite'
+    ])
   },
   computed: {
     ifShow () {
@@ -186,8 +207,16 @@ export default {
         return this.seller.distance + 'm'
       }
     },
+    isFavorite () {
+      let favoriteList = this.user.favorite
+      return favoriteList.findIndex((item) => {
+        return item.id === this.seller.id
+      }) > -1
+    },
     ...mapGetters([
-      'seller'
+      'seller',
+      'user',
+      'logined'
     ])
   },
   components: {

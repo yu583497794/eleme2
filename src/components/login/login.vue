@@ -5,15 +5,15 @@
         <dd class="visibale">
           <dl >
             <dd>
-              <input type="text" name="log-in" id="username" placeholder="账户名/手机号/Email" class="input">
+              <input type="text" name="log-in" id="username" placeholder="账户名/手机号/Email" class="input" v-model="form.name">
             </dd>
             <dd>
-              <input type="password" name="log-in" id="password" placeholder="请输入您的密码" class="input">
+              <input type="password" name="log-in" id="password" placeholder="请输入您的密码" class="input" v-model="form.pass">
             </dd>
           </dl>
         </dd>
         <dd class="login-btn">
-          <input type="submit" value="登陆" id="login-btn">
+          <button type="button" id="login-btn" @click="onSubmit">登陆</button>
         </dd>
       </dl>
     </form>
@@ -21,13 +21,24 @@
       <router-link to="./register" tag="div">立即注册</router-link>
       <router-link to="/profile/foget" tag="div">忘记密码</router-link>
     </div>
+    <div class="login-tip" v-if="loginMessage">{{loginMessage}}</div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import {EventUtil} from 'common/js/dom-util'
+import {mapActions} from 'vuex'
 export default {
   name: 'login',
+  data () {
+    return {
+      form: {
+        name: '',
+        pass: ''
+      },
+      loginMessage: ''
+    }
+  },
   methods: {
     focusHandledr (event) {
       event = EventUtil.getEvent(event)
@@ -38,7 +49,25 @@ export default {
       event = EventUtil.getEvent(event)
       let target = EventUtil.getTarget(event)
       target.style.backgroundColor = '#222'
-    }
+    },
+    onSubmit () {
+      if (this.form.name && this.form.pass) {
+        this.$http.post('/api/user/login', JSON.stringify(this.form)).then((response) => {
+          let res = response.body
+          if (res.code < 1) {
+            this.loginMessage = res.message
+          } else {
+            let loginBtn = document.getElementById('login-btn')
+            loginBtn.innerText = '登陆中...'
+            this.loginAction(res)
+            this.$router.push('/profile/user-center')
+          }
+        })
+      }
+    },
+    ...mapActions([
+      'loginAction'
+    ])
   },
   mounted () {
     let form = document.getElementById('normal-login-form')
