@@ -13,13 +13,16 @@
           </dl>
         </dd>
         <dd class="login-btn">
-          <button type="button" id="login-btn" @click="onSubmit">登陆</button>
+          <button type="button" id="login-btn" @click="onSubmit">
+            <div v-if="!submit">登录</div>
+            <div v-if="submit">登录中<loading-dot></loading-dot></div>
+          </button>
         </dd>
       </dl>
     </form>
     <div class="subline">
       <router-link to="./register" tag="div">立即注册</router-link>
-      <router-link to="/profile/foget" tag="div">忘记密码</router-link>
+      <router-link to="/profile/foget-pass" tag="div">忘记密码</router-link>
     </div>
     <div class="login-tip" v-if="loginMessage">{{loginMessage}}</div>
   </div>
@@ -28,6 +31,7 @@
 <script type="text/ecmascript-6">
 import {EventUtil} from 'common/js/dom-util'
 import {mapActions} from 'vuex'
+import LoadingDot from 'base/loading-dot/loading-dot'
 export default {
   name: 'login',
   data () {
@@ -36,8 +40,12 @@ export default {
         name: '',
         pass: ''
       },
-      loginMessage: ''
+      loginMessage: '',
+      submit: false
     }
+  },
+  components: {
+    LoadingDot
   },
   methods: {
     focusHandledr (event) {
@@ -57,10 +65,13 @@ export default {
           if (res.code < 1) {
             this.loginMessage = res.message
           } else {
-            let loginBtn = document.getElementById('login-btn')
-            loginBtn.innerText = '登陆中...'
+            // let loginBtn = document.getElementById('login-btn')
+            this.submit = true
+            // loginBtn.innerText = '登陆中...'
             this.loginAction(res)
-            this.$router.push('/profile/user-center')
+            setTimeout(() => {
+              this.$router.push('/profile/user-center')
+            }, 2000)
           }
         })
       }
@@ -79,6 +90,9 @@ export default {
     // form.elements.forEach(elem => {
     //   EventUtil.addHandler(elem, 'focus', this.focusHandledr)
     // })
+  },
+  activated () {
+    this.submit = false
   }
 }
 </script>
@@ -111,10 +125,31 @@ export default {
             border-radius 1vw
             color $color-text
             padding 1vw 0
+            // .loading
+            //   display inline-block
+            //   line-height 1em
+            //   &:after
+            //     overflow pre-wrap
+            //     display block
+            //     content '.\A..\A...'
+            //     height 1em
+            //     animation fixed-loading 2s infinite
     .subline
       display flex
       padding 0 3vw
       justify-content space-between
       color $color-theme
       margin 2vw 0
+    .login-tip
+      padding 0 3vw
+      color $color-text-price
+      font-size $font-size-medium
+// @keyframes fixed-loading {
+//   33% {
+//     transform translate3d(0, 33%, 0)
+//   }
+//   66% {
+//     transform translate3d(0, 66%, 0)
+//   }
+// }
 </style>

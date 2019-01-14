@@ -184,7 +184,6 @@ export default {
           seller: this.seller
         })
       }
-      console.log('finish')
     },
     ...mapActions([
       'pushFavorite',
@@ -226,19 +225,20 @@ export default {
     let seller = document.getElementById('seller')
     let head = document.getElementById('seller-head')
     let tab = document.getElementById('seller-tab')
+    window.eventBus.$on('scrollToCat', (height) => {
+      // const offsetHeight = this.fixHeight + this.tabHeight
+      this.scrollTo(height + this.fixHeight)
+    })
     EventUtil.addHandler(seller, 'scroll', this.scrollHandler)
     this.fixHeight = head.clientHeight
     this.tabHeight = tab.clientHeight
   },
   created () {
     if (!this.seller.id) {
-      this.$router.push('/')
-      return
+      this.$router.push({
+        path: '/miste'
+      })
     }
-    window.eventBus.$on('scrollToCat', (height) => {
-      // const offsetHeight = this.fixHeight + this.tabHeight
-      this.scrollTo(height + this.fixHeight)
-    })
   },
   watch: {
     '$route' (to, from) {
@@ -259,7 +259,7 @@ export default {
 @import '~common/stylus/variable'
   .seller
     position fixed
-    z-index 1
+    z-index 2
     top 0
     bottom 0
     right 0

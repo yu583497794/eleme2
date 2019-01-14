@@ -17,6 +17,8 @@
     "good-storage": "^1.1.0",
     "jsonp": "^0.2.1",
     "mysql": "^2.16.0",
+    "nodemailer": "^5.1.1",
+    "nodemailer-smtp-transport": "^2.7.4",
     "swiper": "^4.4.2",
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.6",

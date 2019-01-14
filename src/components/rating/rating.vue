@@ -3,7 +3,7 @@
     <div class="rating-overview">
       <div class="overview overview-left">
         <section class="part-left">
-          <p>{{ratingOverview.star_level.toFixed(1)}}</p>
+          <p>{{typeof ratingOverview.star_level === 'number' && ratingOverview.star_level.toFixed(1)}}</p>
         </section>
         <section class="part-right">
           <span>商家评分</span>
@@ -56,7 +56,8 @@
             </section>
           </div>
         </li>
-        <loading v-show="loading"></loading>
+        <li v-show="loading" class="rating-item"><loading></loading></li>
+        <li class="rating-item no-more-tip" v-if="noMore">没有更多数据了~</li>
       </ul>
     </div>
     <div class="unattach" v-if="!errno">
@@ -83,7 +84,8 @@ export default {
       recordType: 0,
       offset: 0,
       loading: false,
-      errno: false
+      errno: false,
+      noMore: false
     }
   },
   methods: {
@@ -94,7 +96,7 @@ export default {
       this.recordType = flag
     },
     getAvatar (path) {
-      if (path.length === 0) {
+      if (!path) {
         return 'http://image.little-fairy.club/timg.jpg'
       } else {
         return extraUrl(path)
@@ -103,8 +105,8 @@ export default {
     getPic (list) {
       let url = ''
       list.forEach(path => {
-        if (path.image_hash.length > 0) {
-          url = extraUrl(path)
+        if (path.image_hash) {
+          url = extraUrl(path.image_hash)
           return true
         }
       })
@@ -126,11 +128,18 @@ export default {
   watch: {
     recordType (newVal) {
       this.offset = 0
+      this.noMore = false
       getRating(this.seller.id, this.limit, this.offset, this.recordType).then(res => {
         if (res.errno) {
+          if (res.data.length < this.limit) {
+            this.noMore = true
+          }
           this.ratings = res.data
+          this.offset = this.ratings.length
           this.errno = true
         }
+      }).catch(e => {
+        console.log('???')
       })
     }
   },
@@ -145,21 +154,34 @@ export default {
   },
   created () {
     getRating(this.seller.id, this.limit).then((res) => {
+      if (res.data.length < this.limit) {
+        this.noMore = true
+      }
       this.ratings = res.data
       this.offset = this.ratings.length
+      this.errno = true
     })
     getRatingOverview(this.seller.id).then((res) => {
       this.ratingOverview = res.data
-      console.log(this.ratingOverview)
     })
     window.eventBus.$on('loadMore', () => {
-      this.loading = true
-      getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
-        // this.ratings = this.ratings.concat(res.data)
-        this.ratings.push(...res.data)
-        this.offset = this.ratings.length
-        this.loading = false
-      })
+      if (!this.loading && !this.noMore) {
+        this.loading = true
+        getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
+          // this.ratings = this.ratings.concat(res.data)
+          console.log(this.offset)
+          if (res.data.length < this.limit) {
+            this.noMore = true
+            console.log(res.data.length)
+            console.log('no more')
+          }
+          this.ratings.push(...res.data)
+          console.log(res.data)
+          this.offset = this.ratings.length
+          this.loading = false
+          console.log('not loading')
+        })
+      }
     })
   }
 }
@@ -220,8 +242,11 @@ export default {
       .rating-main
         .rating-item
           display flex
-          margin 3.333333vw 0
+          // margin 3.333333vw 0
           border-bottom 0.5px solid $color-dialog-background
+          padding 3.333333vw 0
+          &:last-child
+            border-bottom none
           section
             margin-bottom 1.333333vw
           .avatar

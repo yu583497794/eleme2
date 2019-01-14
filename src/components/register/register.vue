@@ -25,9 +25,12 @@
         <input type="text" class="input-control input-outline" placeholder="昵称">
         <label class="input-label">昵称</label>
       </div> -->
-      <div class="login-submit-x">
-        <!-- <input type="submit" value="注册" :class="loginOk" class="login-submit" @click="onSubmit('form')"> -->
-        <div class="login-submit" :class="loginOk" id="register-submit" @click="onSubmit('form')">注册</div>
+      <div class="register-submit-x">
+        <!-- <input type="submit" value="注册" :class="loginOk" class="register-submit" @click="onSubmit('form')"> -->
+        <div class="register-submit" :class="loginOk" id="register-submit" @click="onSubmit('form')">
+          <span v-if="!submit">注册</span>
+          <span v-if="submit" class="loading">注册中</span>
+        </div>
       </div>
     </form>
   </div>
@@ -54,7 +57,8 @@ export default {
         checkPass: '',
         email: ''
       },
-      success: new Array(INPUT_NUM).fill(0)
+      success: new Array(INPUT_NUM).fill(0),
+      submit: false
     }
   },
   methods: {
@@ -186,11 +190,13 @@ export default {
         this.$http.post('/api/user/addUser', JSON.stringify(this.form), {
           emulateJSON: true
         }).then(function (response) {
-          let button = document.getElementById('register-submit')
-          button.innerText = '注册成功'
-          this.$router.push({
-            path: '/profile/login'
-          })
+          this.submit = true
+          let self = this
+          setTimeout(() => {
+            self.$router.push({
+              path: '/profile/login'
+            })
+          }, 2000)
         }).catch(function (err) {
           console.log(err)
         })
@@ -213,6 +219,9 @@ export default {
     EventUtil.addHandler(email, 'change', this.emailCheck)
     EventUtil.addHandler(password, 'change', this.passwordCheck)
     EventUtil.addHandler(passwordAgain, 'change', this.passwordAgainCheck)
+  },
+  activated () {
+    this.submit = false
   }
 }
 </script>
@@ -278,8 +287,8 @@ export default {
         &:not(:placeholder-shown) ~ .input-label, &:focus ~ .input-label
           transform translate3d(0, -30px, 0) scale(.75)
           color $color-theme-dd
-    .login-submit-x
-      .login-submit
+    .register-submit-x
+      .register-submit
         width 100%
         text-align center
         padding 2.33333vw 0
@@ -288,4 +297,24 @@ export default {
         &.login-ok
           background $color-theme
           color $color-text
+        .loading
+          display inline-block
+          &:after
+            content '...'
+            display inline-block
+            animation loading 2s infinite
+@keyframes loading {
+  0% {
+    content '...'
+    }
+  33% {
+    content '.'
+    }
+  66% {
+    content '..'
+    }
+  100% {
+    content '...'
+    }
+}
 </style>

@@ -42,7 +42,7 @@ export const loginAction = function ({commit, state}, user) {
   commit(types.SET_LOGINED)
 }
 
-export const logoutAction = function ({commit, state}) {
+export const logoutAction = function ({commit}) {
   // state.user.id = 0
   // state.user.favorite = []
   commit(types.SET_USER, {

@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <eleme-head></eleme-head>
+    <eleme-head :userBtn="false"></eleme-head>
     <router-view></router-view>
   </div>
 </template>

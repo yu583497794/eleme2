@@ -58,6 +58,11 @@ const UserCenter = (resolve) => {
     resolve(module)
   })
 }
+const FogetPass = (resolve) => {
+  import('components/foget-pass/foget-pass').then((module) => {
+    resolve(module)
+  })
+}
 export default new Router({
   routes: [
     {
@@ -123,6 +128,10 @@ export default new Router({
         {
           path: 'user-center',
           component: UserCenter
+        },
+        {
+          path: 'foget-pass',
+          component: FogetPass
         }
       ]
     }

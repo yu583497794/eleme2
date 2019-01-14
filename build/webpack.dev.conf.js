@@ -16,6 +16,7 @@ var express= require('express')
 var axios = require('axios')
 const app = express()
 var restaurants = require('../restaurants.json')
+var ratings = require('./data/rating/rating.json')
 // console.log(restaurants)
 var apiRoutes = express.Router()
 app.use('/api', apiRoutes)
@@ -140,48 +141,64 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         //   console.log(e)
         // })
       })
+      // app.get('/api/rating', (req, res) => {
+      //   const id = req.query.id
+      //   var url = `https://www.ele.me/restapi/ugc/v1/restaurant/${id}/ratings`
+      //   // var url = `https://elm.cangdu.org/ugc/v2/restaurants/${id}/ratings`
+      //   delete req.id
+      //   // console.log(req.query)
+      //   return axios.get(url, {
+      //     params: req.query,
+      //     headers: {
+      //       referer: 'https://www.ele.me/shop/'+ id + '/rate',
+      //       'x-shard':'shopid='+ id +';loc=114.414724,30.515977',
+      //       'cookie': 'ubt_ssid=95v6uzys9ipnc2spzukt2u19cxa3l4c2_2018-09-19; _utrace=b6c9430cb5118e4440d6ec720e4ec55c_2018-09-19; cna=0fgDFEKVm2UCAdNFxTWSOPgr; eleme__ele_me=fc4194a1b2839561e7a290898d4d07ad%3A87a8a0210f57bd09d39ee07556a342ab7188b874; UTUSER=988249458; track_id=1537327981|c485d4a2c14df058d75c84fd3d88f5dd3d6d9a999deaabdef2|353d4ef6f95dffc64257c8250762e485; USERID=988249458; SID=59L9LZ55pcYa3AEQu3c215SaYgI0yu6BSfKA; isg=BPLyL-F4-hoIYsGdqtNlEJWBQzgHxjMoYrER4LzLH6WQT5NJpBLELATtO-1zP261'
+      //     }
+      //   }).then((response) => {
+      //     console.log(response)
+      //     response = Object.assign(response.data, {
+      //       errno: true
+      //     })
+      //     res.json(response.data)
+      //   }).catch((e) => {
+      //     console.log(e)
+      //     const response = {
+      //       errno: false,
+      //       message: '不给我接口,我也很无奈啊~'
+      //     }
+      //     res.json(response)
+      //   })
+      // })
       app.get('/api/rating', (req, res) => {
-        const id = req.query.id
-        var url = `https://www.ele.me/restapi/ugc/v1/restaurant/${id}/ratings`
-        // var url = `https://elm.cangdu.org/ugc/v2/restaurants/${id}/ratings`
-        delete req.id
-        // console.log(req.query)
-        return axios.get(url, {
-          params: req.query,
-          headers: {
-            referer: 'https://www.ele.me/shop/'+ id + '/rate',
-            'x-shard':'shopid='+ id +';loc=114.414724,30.515977',
-            'cookie': 'ubt_ssid=95v6uzys9ipnc2spzukt2u19cxa3l4c2_2018-09-19; _utrace=b6c9430cb5118e4440d6ec720e4ec55c_2018-09-19; cna=0fgDFEKVm2UCAdNFxTWSOPgr; eleme__ele_me=fc4194a1b2839561e7a290898d4d07ad%3A87a8a0210f57bd09d39ee07556a342ab7188b874; UTUSER=988249458; track_id=1537327981|c485d4a2c14df058d75c84fd3d88f5dd3d6d9a999deaabdef2|353d4ef6f95dffc64257c8250762e485; USERID=988249458; SID=59L9LZ55pcYa3AEQu3c215SaYgI0yu6BSfKA; isg=BPLyL-F4-hoIYsGdqtNlEJWBQzgHxjMoYrER4LzLH6WQT5NJpBLELATtO-1zP261'
-          }
-        }).then((response) => {
-          console.log(response)
-          response = Object.assign(response.data, {
-            errno: true
-          })
-          res.json(response.data)
-        }).catch((e) => {
-          console.log(e)
-          const response = {
-            errno: false,
-            message: '不给我接口,我也很无奈啊~'
-          }
-          res.json(response)
-        })
+        const ratings = require('./data/rating/rating.json')
+        // 注意将字符串转化为数字, 否则会直接加载完全部的数据
+        const limit = parseInt(req.query.limit)
+        let offset = parseInt(req.query.offset)
+        let end = limit + offset
+        let response = ratings.slice(offset, end)
+        res.json(Object.assign(response, {
+          errno: true
+        }))
       })
+      // app.get('/api/rating-overview', (req, res) => {
+      //   const id = req.query.id
+      //   const url = `https://www.ele.me/restapi/ugc/v1/restaurants/${id}/rating_scores`
+      //   delete req.query.id
+      //   axios.get(url, {
+      //     headers: {
+      //       referer: `https://www.ele.me/shop/${id}/rate`,
+      //       cookie: 'ubt_ssid=95v6uzys9ipnc2spzukt2u19cxa3l4c2_2018-09-19; _utrace=b6c9430cb5118e4440d6ec720e4ec55c_2018-09-19; cna=0fgDFEKVm2UCAdNFxTWSOPgr; eleme__ele_me=fc4194a1b2839561e7a290898d4d07ad%3A87a8a0210f57bd09d39ee07556a342ab7188b874; UTUSER=988249458; track_id=1537327981|c485d4a2c14df058d75c84fd3d88f5dd3d6d9a999deaabdef2|353d4ef6f95dffc64257c8250762e485; USERID=988249458; SID=59L9LZ55pcYa3AEQu3c215SaYgI0yu6BSfKA; isg=BPLyL-F4-hoIYsGdqtNlEJWBQzgHxjMoYrER4LzLH6WQT5NJpBLELATtO-1zP261',
+      //       'x-shard': 'shopid=E1206146692683190592;loc=114.414724,30.515977'
+      //     },
+      //     params: req.query
+      //   }).then((response) => {
+      //     res.json(response.data)
+      //   })
+      // })
       app.get('/api/rating-overview', (req, res) => {
-        const id = req.query.id
-        const url = `https://www.ele.me/restapi/ugc/v1/restaurants/${id}/rating_scores`
-        delete req.query.id
-        axios.get(url, {
-          headers: {
-            referer: `https://www.ele.me/shop/${id}/rate`,
-            cookie: 'ubt_ssid=95v6uzys9ipnc2spzukt2u19cxa3l4c2_2018-09-19; _utrace=b6c9430cb5118e4440d6ec720e4ec55c_2018-09-19; cna=0fgDFEKVm2UCAdNFxTWSOPgr; eleme__ele_me=fc4194a1b2839561e7a290898d4d07ad%3A87a8a0210f57bd09d39ee07556a342ab7188b874; UTUSER=988249458; track_id=1537327981|c485d4a2c14df058d75c84fd3d88f5dd3d6d9a999deaabdef2|353d4ef6f95dffc64257c8250762e485; USERID=988249458; SID=59L9LZ55pcYa3AEQu3c215SaYgI0yu6BSfKA; isg=BPLyL-F4-hoIYsGdqtNlEJWBQzgHxjMoYrER4LzLH6WQT5NJpBLELATtO-1zP261',
-            'x-shard': 'shopid=E1206146692683190592;loc=114.414724,30.515977'
-          },
-          params: req.query
-        }).then((response) => {
-          res.json(response.data)
-        })
+        let id = req.query.id
+        let response = require(`./data/rating/${id}`)
+        res.json(response)
       })
       app.get('/api/qualification', (req, res) => {
         const url = `https://h5.ele.me/restapi/shopping/v1/restaurants/${req.query.id}/business/qualification`
