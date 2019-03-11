@@ -4,14 +4,14 @@
       <icon name="home" scale="2" class="icon"></icon>
       <span class="text">外卖</span>
     </router-link>
-    <router-link tag="div" to="/order" class="foot-item" id="order">
+    <!-- <router-link tag="div" to="/order" class="foot-item" id="order">
       <icon name="form" scale="2" class="icon"></icon>
       <span class="text">订单</span>
     </router-link>
     <router-link tag="div" to="/search" class="foot-item" id="search">
       <icon name="search" scale="2" class="icon"></icon>
       <span class="text">搜索</span>
-    </router-link>
+    </router-link> -->
     <router-link tag="div" to="/profile" class="foot-item" id="profile">
       <icon name="Smile" scale="2" class="icon"></icon>
       <span class="text">我的</span>
