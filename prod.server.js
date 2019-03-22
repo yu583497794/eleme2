@@ -2,7 +2,7 @@ var express = require('express');
 var config = require('./config/index');
 var axios = require('axios')
 const app = express();
-var apiRouter = express.Router();
+// var apiRouter = express.Router();
 var restaurants = require('./restaurants.json')
 var ratings = require('./build/data/rating/rating.json')
 app.get('/api/banners', (req, res) => {
@@ -69,10 +69,10 @@ app.get('/api/rating', (req, res) => {
  })
  // app.use('/api', apiRoutes)
  // 静态目录
- app.use(express.static('./dist'))
+ // app.use(express.static('./dist'))
 
- var port = process.env.PORT || config.build.port
- // var port = 3007;
+ // var port = process.env.PORT || config.build.port
+var port = 3007;
  module.exports = app.listen(port, function (err) {
    if (err) {
      console.log(err)

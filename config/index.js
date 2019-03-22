@@ -63,21 +63,21 @@ module.exports = {
         pathRewrite: {
           '^/log-api': ''
         }
+      },
+      '/api': {
+        // target: 'http://little-fairy.club:3008/api',
+        target: 'http://little-fairy.club:3007/api',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
       }
-      // '/api': {
-      //   // target: 'http://little-fairy.club:3008/api',
-      //   target: 'http://little-fairy.club:3007/api',
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/api': ''
-      //   }
-      // }
     },
-    port: 3007,
+    port: 9001,
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
