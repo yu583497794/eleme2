@@ -187,7 +187,7 @@ export default {
       if (!this.success.some(item => {
         return !item
       })) {
-        this.$http.post('/api/user/addUser', JSON.stringify(this.form), {
+        this.$http.post('/log-api/user/addUser', JSON.stringify(this.form), {
           emulateJSON: true
         }).then(function (response) {
           this.submit = true

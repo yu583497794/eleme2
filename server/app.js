@@ -9,7 +9,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 
-app.use('/api/user', userApi)
+app.use('/log-api/user', userApi)
 
-app.listen(3000)
-console.log('success listen at port: 3000')
+app.listen(3008)
+console.log('success listen at port: 3008')

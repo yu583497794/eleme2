@@ -97,7 +97,7 @@ export default {
     submitName () {
       let name = document.getElementById('foget-name').value
       if (this.nextStepOk) {
-        this.$http.post('/api/user/getUserId', {
+        this.$http.post('/log-api/user/getUserId', {
           name
         }).then(res => {
           if (res.body.id) {
@@ -117,7 +117,7 @@ export default {
       let code = document.getElementById('verify-code').value
       let date = Date.parse(new Date())
       if (code) {
-        this.$http.post('/api/user/sendVerifyCode', {
+        this.$http.post('/log-api/user/sendVerifyCode', {
           code,
           date,
           id: this.id
@@ -137,7 +137,7 @@ export default {
     queryVerifyCode () {
       let email = document.getElementById('foget-email').value
       if (email && this.sendOk) {
-        this.$http.post('/api/user/queryVerifyCode', {
+        this.$http.post('/log-api/user/queryVerifyCode', {
           email,
           id: this.id
         }).then((res) => {
@@ -165,7 +165,7 @@ export default {
         this.errMessage = '两次密码输入不一致'
       } else {
         let date = Date.parse(new Date())
-        this.$http.post('/api/user/modifyPassword', {
+        this.$http.post('/log-api/user/modifyPassword', {
           id: this.id,
           pass,
           date

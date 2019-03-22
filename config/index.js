@@ -12,11 +12,11 @@ module.exports = {
     assetsPublicPath: '/',
     // !!!用来设置地址映射表
     proxyTable: {
-      '/api': {
-        target: 'http://127.0.0.1:3000/api',
+      '/log-api': {
+        target: 'http://127.0.0.1:3008/log-api',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/log-api': ''
         }
       }
     },
@@ -55,7 +55,25 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-
+    proxyTable: {
+      '/log-api': {
+        // target: 'http://little-fairy.club:3008/api',
+        target: 'http://little-fairy.club:3008/api',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/log-api': ''
+        }
+      },
+      '/api': {
+        // target: 'http://little-fairy.club:3008/api',
+        target: 'http://little-fairy.club:3007/api',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
+    port: 3007,
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',

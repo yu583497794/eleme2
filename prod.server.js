@@ -1,9 +1,10 @@
 var express = require('express');
-var conf = require('./config/index');
+var config = require('./config/index');
 var axios = require('axios')
 const app = express();
 var apiRouter = express.Router();
-
+var restaurants = require('./restaurants.json')
+var ratings = require('./build/data/rating/rating.json')
 app.get('/api/banners', (req, res) => {
   var url = "https://h5.ele.me/restapi/shopping/v2/banners"
   axios.get(url, {
@@ -26,12 +27,12 @@ app.get('/api/recommends', (req, res) => {
   res.json(response)
   })
 app.get('/api/menu', (req, res) => {
-  let url = `./data/menu/${req.query.restaurant_id}.json`
+  let url = `./build/data/menu/${req.query.restaurant_id}.json`
   let menu = require(url)
   res.json(menu)
 })
 app.get('/api/rating', (req, res) => {
-  const ratings = require('./data/rating/rating.json')
+  const ratings = require('./build/data/rating/rating.json')
   // 注意将字符串转化为数字, 否则会直接加载完全部的数据
   const limit = parseInt(req.query.limit)
   let offset = parseInt(req.query.offset)
@@ -43,7 +44,7 @@ app.get('/api/rating', (req, res) => {
 })
  app.get('/api/rating-overview', (req, res) => {
    let id = req.query.id
-   let response = require(`./data/rating/${id}`)
+   let response = require(`./build/data/rating/${id}`)
    res.json(response)
  })
  app.get('/api/qualification', (req, res) => {
@@ -65,4 +66,16 @@ app.get('/api/rating', (req, res) => {
      console.log(response)
      res.json(response)
    })
+ })
+ // app.use('/api', apiRoutes)
+ // 静态目录
+ app.use(express.static('./dist'))
+
+ var port = process.env.PORT || config.build.port
+ module.exports = app.listen(port, function (err) {
+   if (err) {
+     console.log(err)
+     return
+   }
+   console.log('Listening at http://localhost:' + port + '\n')
  })
