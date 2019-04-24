@@ -9,11 +9,19 @@ import Icon from 'vue-svg-icon/Icon.vue'
 import VueLazyLoad from 'vue-lazyload'
 import resource from './resource/index'
 import 'common/stylus/index.styl'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+// eslint-disable-next-line
+// import axios from 'axios'
 Vue.config.productionTip = false
 Vue.component('icon', Icon)
 Vue.use(VueLazyLoad, {
   loading: require('common/image/default.jpg')
 })
+Vue.use(ElementUI)
+// let axios = require('axios')
+// axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+// Vue.prototype.$http = axios
 /* eslint-disable no-new */
 window.eventBus = new Vue()
 new Vue({
