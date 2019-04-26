@@ -33,7 +33,8 @@ io.on('connection', (socket) => {
   })
   socket.on('reqAllPart', ([offset, num]) => {
     socket.emit('resAllPart', {
-      participators: participators.slice(offset, offset + num),
+      // participators: participators.slice(offset, offset + num),
+      participators,
       total: participators.length
     })
   })

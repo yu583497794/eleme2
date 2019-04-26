@@ -130,7 +130,8 @@ export default {
       })
     })
     socket.on('resAllPart', (data) => {
-      this.participators = this.participators.concat(data.participators)
+      // this.participators = this.participators.concat(data.participators)
+      this.participators = data.participators
       this.showFlag = !this.showFlag
       this.total = data.total
     })
