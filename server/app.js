@@ -10,6 +10,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 
 app.use('/log-api/user', userApi)
-
-app.listen(3008)
-console.log('success listen at port: 3008')
+app.use(express.static('../dist') )
+app.listen(3006)
+console.log('success listen at port: 3006')
