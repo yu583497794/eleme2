@@ -60,7 +60,9 @@ export default {
     },
     onSubmit () {
       if (this.form.name && this.form.pass) {
-        this.$http.post('/log-api/user/login', JSON.stringify(this.form)).then((response) => {
+        this.$http.post('/log-api/user/login', JSON.stringify(this.form), {
+          emulateJSON: true
+        }).then((response) => {
           let res = response.body
           if (res.code < 1) {
             this.loginMessage = res.message

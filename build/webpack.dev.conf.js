@@ -19,6 +19,7 @@ var restaurants = require('../restaurants.json')
 var ratings = require('./data/rating/rating.json')
 // console.log(restaurants)
 var apiRoutes = express.Router()
+
 app.use('/api', apiRoutes)
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {

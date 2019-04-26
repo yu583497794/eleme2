@@ -73,6 +73,7 @@ app.get('/api/rating', (req, res) => {
 
  var port = process.env.PORT || config.build.port
  //port = 3007;
+
  module.exports = app.listen(port, function (err) {
    if (err) {
      console.log(err)
