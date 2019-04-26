@@ -33,19 +33,18 @@ export default {
   },
   methods: {
     listScroll (event) {
-      console.log('!!!')
       event = EventUtil.getEvent(event)
       let target = EventUtil.getTarget(event)
-      console.log(this.reqFlag)
-      console.log(Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight))
       if (this.reqFlag && Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight) < 0.5) {
         this.$emit('reqmore')
         this.reqFlag = false
         // 避免重复请求
-        setTimeout(1000, function () {
+        setTimeout(function () {
           this.reqFlag = true
-          console.log('turn true')
-        })
+          console.log('this.reqFlag =', this.reqFlag)
+          console.log('true already')
+        }, 1000)
+        console.log('turn true')
       }
     }
   }

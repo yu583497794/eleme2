@@ -8,8 +8,8 @@ const Miste = (resolve) => {
     resolve(module)
   })
 }
-const Order = (resolve) => {
-  import('components/order/order').then((module) => {
+const Chatroom = (resolve) => {
+  import('components/chatroom/chatroom').then((module) => {
     resolve(module)
   })
 }
@@ -101,8 +101,8 @@ export default new Router({
       ]
     },
     {
-      path: '/order',
-      component: Order
+      path: '/chatroom',
+      component: Chatroom
     },
     {
       path: '/search',

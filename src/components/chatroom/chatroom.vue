@@ -1,5 +1,5 @@
 <template>
-  <div class="order">
+  <div class="chatroom">
     <ul ref="messages" id="messages">
       <li v-for="(message, index) in messages" :key="index">
         <message :msg="message"></message>
@@ -16,7 +16,6 @@
       <participator-list
         :participators="participators"
         :total="total" v-show="showFlag"
-        @click="toggleShow"
         class="participator-list"
         @reqmore="reqServerMore">
       </participator-list>
@@ -33,7 +32,7 @@ import ParticipatorList from './participatorList'
 // import {getAvatar} from 'api/chatRoom'
 var socket = io('127.0.0.1:3010')
 export default {
-  name: 'order',
+  name: 'chatroom',
   data () {
     return {
       messages: [],
@@ -81,6 +80,7 @@ export default {
       this.avatar = `https://q2.qlogo.cn/headimg_dl?dst_uin=${number}&spec=100`
     },
     toggleShow () {
+      console.log('click')
       if (!this.showFlag) {
         this.showAllParticipator(this.offset, this.reqNum)
       } else {
@@ -91,9 +91,8 @@ export default {
       socket.emit('reqAllPart', [offset, num])
     },
     reqServerMore () {
-      console.log('query more')
       this.offset = this.participators.length
-      this.showAllParticipator(this.total, this.reqNum)
+      this.showAllParticipator(this.offset, this.reqNum)
     }
   },
   mounted () {
@@ -131,7 +130,7 @@ export default {
       })
     })
     socket.on('resAllPart', (data) => {
-      this.participators = data.participators
+      this.participators = this.participators.concat(data.participators)
       this.showFlag = !this.showFlag
       this.total = data.total
     })
@@ -168,7 +167,7 @@ export default {
 //     transform scale(1, 1, 1) skew(0, 0) rotate3d(0,  0, 0)
 //   }
 // }
-  .order
+  .chatroom
     position absolute
     top 0
     bottom 80px
