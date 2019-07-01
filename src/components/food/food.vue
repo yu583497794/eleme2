@@ -180,10 +180,19 @@ export default {
       // category.style['z-index'] = 1
     },
     selectCategory (index) {
+      const totalHeight = this.$refs['foodWrapper'].clientHeight
+      // tab 固定44px  cart-main 12.8vw
+      const wrapperHeight = window.innerHeight - 44 - 0.128 * window.innerWidth
       if (this.currentIndex === index) {
         return
       }
-      this.currentIndex = index
+      if (totalHeight - this.listHeight[index] >= wrapperHeight) {
+        this.currentIndex = index
+      } else {
+        let toIndex = index - 1
+        while (totalHeight - this.listHeight[toIndex] < wrapperHeight) { toIndex++ }
+        this.currentIndex = toIndex
+      }
       // 事件:滚动到菜单指定位置
       window.eventBus.$emit('scrollToCat', this.listHeight[index])
     },
@@ -284,33 +293,33 @@ export default {
     this.$nextTick(() => {
       setTimeout(() => {
         this._calculateHeight()
+        EventUtil.addHandler(this.$refs.menu, 'scroll', this.scrollHandler)
+        window.eventBus.$on('foodScroll', (scrollTop) => {
+          if (this.$route.path.split('/').pop() !== 'menu') {
+            return
+          }
+          if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
+            // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
+            let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
+            if (this.diff === diff) {
+              return
+            }
+            this.diff = diff
+            const category = document.getElementById('fixed-category')
+            category.style.transform = `translate3d(0, -${diff}px, 0)`
+            return
+          }
+          if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
+            this.currentIndex++
+          } else {
+            if (scrollTop < this.listHeight[this.currentIndex]) {
+              this.currentIndex--
+            }
+          }
+        })
       }, 1000)
       this.resetMenu()
       // this._calculateHeight()
-    })
-    EventUtil.addHandler(this.$refs.menu, 'scroll', this.scrollHandler)
-    window.eventBus.$on('foodScroll', (scrollTop) => {
-      if (this.$route.path.split('/').pop() !== 'menu') {
-        return
-      }
-      if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
-        // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-        let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-        if (this.diff === diff) {
-          return
-        }
-        this.diff = diff
-        const category = document.getElementById('fixed-category')
-        category.style.transform = `translate3d(0, -${diff}px, 0)`
-        return
-      }
-      if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
-        this.currentIndex++
-      } else {
-        if (scrollTop < this.listHeight[this.currentIndex]) {
-          this.currentIndex--
-        }
-      }
     })
     this._initFixedCategory()
     setTimeout(() => {
