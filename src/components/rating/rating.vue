@@ -17,7 +17,16 @@
       <div class="overview overview-right">
         <section><span class="title">好评率</span><p class="text">{{ratingOverview.positive_rating*100}}%</p></section>
       </div>
+      <div class="rating-btn" @click="toggleRatingEditor">
+        <span class="text">评价一发</span>
+      </div>
     </div>
+    <transition name="wrap">
+      <div class="rating-editor-wrapper" v-show="ratingEditorShow">
+        <h3 class="rating-title"><span class="material-icons">store</span>店铺评价</h3>
+        <react :component='component' num='5'></react>
+      </div>
+    </transition>
     <div class="rating-list-wrapper" v-if="errno">
       <div class="rating-filter">
         <div class="rating-filter-item" @click="filter(1)">全部</div>
@@ -73,11 +82,18 @@ import {getRating, getRatingOverview} from 'api/seller'
 import Star from 'base/star/star'
 import {extraUrl} from 'common/js/banner'
 import Loading from 'base/loading/loading'
+// import ReactDOM from 'react-dom'
+import RatingEditor from '../rating-editor/RatingEditor.js'
+// import PlainText from '../rating-editor/test.js'
+import {ReactWrapper} from 'vuera'
+// eslint-disable-next-line
+import React from 'react'
 const ratingWordsList = ['超赞', '满意', '一般', '失望', '极差']
 export default {
   name: 'rating',
   data () {
     return {
+      component: RatingEditor,
       ratings: [],
       limit: 10,
       ratingOverview: {},
@@ -85,7 +101,8 @@ export default {
       offset: 0,
       loading: false,
       errno: false,
-      noMore: false
+      noMore: false,
+      ratingEditorShow: false
     }
   },
   methods: {
@@ -123,6 +140,9 @@ export default {
       // console.log(num)
       // return num.toFixed(dim)
       return Math.floor(num * 10) / 10
+    },
+    toggleRatingEditor () {
+      this.ratingEditorShow = !this.ratingEditorShow
     }
   },
   watch: {
@@ -139,7 +159,7 @@ export default {
           this.errno = true
         }
       }).catch(e => {
-        console.log('???')
+        console.log(e)
       })
     }
   },
@@ -150,7 +170,8 @@ export default {
   },
   components: {
     Star,
-    Loading
+    Loading,
+    react: ReactWrapper
   },
   created () {
     getRating(this.seller.id, this.limit).then((res) => {
@@ -169,20 +190,19 @@ export default {
         this.loading = true
         getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
           // this.ratings = this.ratings.concat(res.data)
-          console.log(this.offset)
           if (res.data.length < this.limit) {
             this.noMore = true
-            console.log(res.data.length)
-            console.log('no more')
           }
           this.ratings.push(...res.data)
-          console.log(res.data)
           this.offset = this.ratings.length
           this.loading = false
-          console.log('not loading')
         })
       }
     })
+  },
+  mounted () {
+    // const id = this.$route.params.id
+    // ReactDOM.render(<RatingEditor sellerid={id}/>, document.querySelector('.rating-editor-wrapper'))
   }
 }
 </script>
@@ -194,18 +214,31 @@ export default {
     .rating-overview
       display flex
       flex-wrap nowrap
-      padding 5.333333vw 0 8vw 6.4vw
+      padding 5.333333vw 6.4vw 8vw 6.4vw
       margin-bottom 2.133333vw
       background $color-background
       border-top 0.5px solid $color-text-l
+      .rating-btn
+        flex 2
+        display flex
+        height 100%
+        background $color-theme
+        border-radius 10%
+        border 2px solid $color-theme
+        align-self  center
+        .text
+          display inline-block
+          width 100%
+          padding 2px 0
+          text-align center
       .overview
-        flex 1
         .title
           font-size $font-size-small
         .text
           font-size $font-size-medium
           margin-top 1.333333vw
       .overview-left
+        flex 3.5
         display flex
         .part-left
           font-size $font-size-large-x
@@ -221,12 +254,32 @@ export default {
           .star
             margin-top 1.333333vw
       .overview-center
+        flex 2.5
         display flex
         border-right 0.5px solid $color-text-l
         margin-right 2.333333vw
         text-align center
         .part
           flex 1
+      .overview-right
+        flex 2
+    .rating-editor-wrapper
+      opacity 100
+      background $color-background
+      padding 5.333333vw 6.4vw
+      color white
+      &.wrap-enter-active, &wrap-leave-active
+        transition all 0.3s ease
+      &.wrap-leave-to, &.wrap-enter
+        transform translateY(0)
+        opacity 0
+      .rating-title
+        font-weight 700
+        font-size $font-size-small-x
+        display flex
+        align-items center
+        span
+          margin-right 5px
     .rating-list-wrapper
       background $color-background
       padding 5.333333vw 6.4vw 8vw 6.4vw

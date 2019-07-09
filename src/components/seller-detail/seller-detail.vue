@@ -147,6 +147,13 @@ export default {
       'seller'
     ])
   },
+  created () {
+    if (!this.seller) {
+      this.$router.push({
+        path: '/miste'
+      })
+    }
+  },
   mounted () {
     getQualification(this.seller.id).then(res => {
       this.qualification = res.data

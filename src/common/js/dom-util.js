@@ -1,5 +1,6 @@
 export const EventUtil = {
   addHandler: (el, type, handler) => {
+    if (!el) return
     if (el.addEventListener) {
       el.addEventListener(type, handler, false)
     } else {

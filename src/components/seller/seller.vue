@@ -21,13 +21,13 @@
             <span class="rating">评价{{seller.rating}}</span>
             <span>月售{{seller.recent_order_num}}单</span>
           </section>
-          <section v-if="seller.activities.length > 0" class="activities">
+          <section v-if="seller.activities && seller.activities.length > 0" class="activities">
             <div class="active">
               <span class="active-icon" :class="classMap(seller.activities[0].icon_name)">{{seller.activities[0].icon_name}}</span>
               <span>{{seller.activities[0].description}}</span>
             </div>
-            <div class="total" v-if="seller.activities.length > 1" @click.stop="toggleDetail('activity')">
-              <span class="text">{{seller.activities.length}}个活动</span>
+            <div class="total" v-if="seller.activities && seller.activities.length > 1" @click.stop="toggleDetail('activity')">
+              <span class="text">{{seller.activities && seller.activities.length}}个活动</span>
               <icon scale="1.5" :name="showFlag.activity ? 'fold' : 'unfold'" class="icon-fold"></icon>
             </div>
           </section>
@@ -222,6 +222,7 @@ export default {
     Tab
   },
   mounted () {
+    if (!this.seller.id) return
     let seller = document.getElementById('seller')
     let head = document.getElementById('seller-head')
     let tab = document.getElementById('seller-tab')
@@ -234,10 +235,10 @@ export default {
     this.tabHeight = tab.clientHeight
   },
   created () {
-    if (!this.seller.id) {
+    if (this.seller.id === undefined) {
       this.$router.push({
         path: '/miste'
-      })
+      }, () => { console.log('Jump to', this.$route.path) })
     }
   },
   watch: {
