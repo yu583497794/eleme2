@@ -29,10 +29,10 @@
     </transition>
     <div class="rating-list-wrapper" v-if="errno">
       <div class="rating-filter">
-        <div class="rating-filter-item" @click="filter(1)">全部</div>
-        <div class="rating-filter-item" @click="filter(2)">满意</div>
-        <div class="rating-filter-item" @click="filter(3)">不满意</div>
-        <div class="rating-filter-item" @click="filter(4)">有图</div>
+        <div :class="['rating-filter-item', recordType === 1 ? 'active' : '']" @click="filter(1)">全部</div>
+        <div :class="['rating-filter-item', recordType === 2 ? 'active' : '']" @click="filter(2)">满意</div>
+        <div :class="['rating-filter-item', recordType === 3 ? 'active' : '']" @click="filter(3)">不满意</div>
+        <div :class="['rating-filter-item', recordType === 4 ? 'active' : '']" @click="filter(4)">有图</div>
       </div>
       <ul class="rating-main">
         <li v-for="(rating, index) in ratings" :key="index" class="rating-item">
@@ -304,6 +304,9 @@ export default {
           margin 0 1vw
           border 1px solid $color-text-l
           border-radius 2px
+          &.active
+            background $color-theme
+            font-weight 800
       .rating-main
         .rating-item
           display flex
