@@ -72,8 +72,6 @@ const schema = {
     ],
     last: { type: 'paragraph' },
     normalize: (editor, {code, node, child, index}) => {
-      console.log('?????normalize')
-      console.log(code)
       switch (code) {
         case 'child_type_invalid':
           return editor.setNodeByKey(child.key, { type: 'paragraph' })
@@ -116,7 +114,7 @@ class Emojis extends React.Component {
     this.renderMark = this.renderMark.bind(this)
     this.renderMarkButton = this.renderMarkButton.bind(this)
     this.onClickEmoji = this.onClickEmoji.bind(this)
-    // this.onChange = this.onChange.bind(this)
+    this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onBlur = this.onBlur.bind(this)
     // this.hasMark = this.hasMark.bind(this)
@@ -161,14 +159,14 @@ class Emojis extends React.Component {
             <Button onMouseDown={this.toggleEmojisBar}>
               <Icon >{'face'}</Icon>
             </Button>
-            <div
+            { showEmojisBar && (<div
               className={cx(
                 'emojis-bar',
                 'container',
                 'material-icons',
-                css`
-                  display: ${showEmojisBar ? 'none' : 'block'};
-                `
+                // css`
+                //   display: ${showEmojisBar ? 'none' : 'block'};
+                // `
               )}
             >
               <div className='row'>
@@ -178,7 +176,7 @@ class Emojis extends React.Component {
                   </Button>
                 ))}
               </div>
-            </div>
+            </div>)}
           </div>
           { this.renderMarkButton('bold', 'format_bold') }
           { this.renderMarkButton('italic', 'format_italic') }
@@ -193,9 +191,18 @@ class Emojis extends React.Component {
           renderInline={this.renderInline}
           renderMark={this.renderMark}
           // plugins={plugins}
-          // onChange={this.onChange}
+          onChange={this.onChange}
           onKeyDown={this.onKeyDown}
           // onBlur={this.onBlur}
+          className={
+            css`
+              box-sizing: content-box;
+              min-height: 4.2em;
+              line-height: 1.4em;
+              background: rgba(125, 125, 125, 0.7);
+              padding: 1em;
+            `
+          }
         />
       </div>
     )
@@ -301,11 +308,11 @@ class Emojis extends React.Component {
       .moveToStartOfNextText()
       .focus()
   }
-  // onChange ({value}) {
-  //   this.setState({
-  //     value
-  //   })
-  // }
+  onChange ({value}) {
+    this.setState({
+      value: JSON.stringify(value.toJSON())
+    })
+  }
   onKeyDown (event, editor, next) {
     let mark = ''
     if (isBoldHotkey(event)) {

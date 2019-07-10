@@ -1,90 +1,68 @@
 import React from 'react'
-// import {Editor} from 'slate-react'
 import Emojis from './emojis/index.js'
-// import {Value} from 'slate'
-// import initalValueJSON from './value.json'
+// eslint-disable-next-line
+import {Value} from 'slate'
 import Star from '../star/Star'
 import './index.styl'
-// import Plain from 'slate-plain-serializer'
-
-// const initialValue = Value.fromJSON(initalValueJSON)
-
-// class RatingEditor extends React.Component {
-//   constructor (props) {
-//     super(props)
-//     this.onChange = this.onChange.bind(this)
-//     this.state = {
-//       value: initialValue
-//     }
-//     this.renderBlock = this.renderBlock.bind(this)
-//   }
-//   render () {
-//     return (
-//       <React.Fragment>
-//         <Star num={5}></Star>
-//         <Editor
-//           contentable
-//           spellCheck
-//           autoFocus
-//           placeholder="Get to work..."
-//           defaultValue={initialValue}
-//           onChange={this.onChange}
-//           className="Editor"
-//           renderBlock={this.renderBlock}
-//         />
-//       </React.Fragment>
-//     )
-//   }
-//   onChange ({value}) {
-//     this.setState({
-//       value
-//     })
-//   }
-//   renderBlock (props, editor, next) {
-//     const {type} = props
-//     switch (type) {
-//       default: {
-//         return next()
-//       }
-//     }
-//   }
-// }
-
-// const initialValue = Plain.deserialize(
-//   'This is editable plain text, just like a <textarea>!'
-// )
-
+import loading from './loading.gif'
 class RatingEditor extends React.Component {
   constructor (props) {
     super(props)
-    this.handleClick = this.handleClick.bind(this)
+    this.sellerStar = React.createRef()
+    this.serviceStar = React.createRef()
+    this.foodStar = React.createRef()
+    this.editor = React.createRef()
+    this.submitRating = this.submitRating.bind(this)
+    this.state = {
+      completed: false
+    }
     // this.render = this.render.bind(this)
   }
   render () {
+    const {completed} = this.state
     return (
-      <div className="rating-editor-wrapper">
+      <div className={`rating-editor-wrapper`}>
         <ul className="rating-star-wrapper">
           <li className="rating-star-item">
-            <span className="rating-star-label">商家</span><Star></Star>
+            <span className="rating-star-label">商家</span><Star ref={this.sellerStar}></Star>
           </li>
           <li className="rating-star-item">
-            <span className="rating-star-label">菜品</span><Star></Star>
+            <span className="rating-star-label">菜品</span><Star ref={this.foodStar}></Star>
           </li>
           <li className="rating-star-item">
-            <span className="rating-star-label">服务</span><Star></Star>
+            <span className="rating-star-label">服务</span><Star ref={this.serviceStar}></Star>
           </li>
         </ul>
-        <Emojis />
-        {/* <Editor
-          contenteditable
-          placeholder="Enter some plain text..."
-          defaultValue={initialValue}
-        /> */}
+        <Emojis ref={this.editor}/>
+        <button
+          className='rating-submit-btn'
+          onMouseDown={this.submitRating}
+        >提交评价</button>
+        {
+          completed && (<div className="filter-level">
+            <img width="24" height="24" src={loading}></img>
+          </div>)
+        }
       </div>
     )
   }
-  handleClick (e) {
-    console.log(e)
+  submitRating () {
+    const {sellerId} = this.props
+    const data = {
+      sellerStar: this.sellerStar.current.state.selected,
+      serviceStar: this.serviceStar.current.state.selected,
+      foodStar: this.foodStar.current.state.selected,
+      content: this.editor.current.state.value,
+      sellerId
+    }
+    console.log(data)
+    this.setState({
+      completed: true
+    })
+    this.editor.current.setState({
+      showEmojisBar: false
+    })
+    setTimeout(this.props.toggleRatingEditor, 2000)
   }
 }
 export default RatingEditor

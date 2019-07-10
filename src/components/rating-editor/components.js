@@ -15,57 +15,11 @@ export const Button = React.forwardRef(
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 2vw
+          vertical-align: bottom
         `
       )}
     />
   )
-)
-
-export const EditorValue = React.forwardRef(
-  ({ className, value, ...props }, ref) => {
-    const textLines = value.document.nodes
-      .map(node => node.text)
-      .toArray()
-      .join('\n')
-    return (
-      <div
-        ref={ref}
-        {...props}
-        className={cx(
-          className,
-          css`
-            margin: 30px -20px 0;
-          `
-        )}
-      >
-        <div
-          className={css`
-            font-size: 14px;
-            padding: 5px 20px;
-            color: #404040;
-            border-top: 2px solid #eeeeee;
-            background: #f8f8f8;
-          `}
-        >
-          Slate's value as text
-        </div>
-        <div
-          className={css`
-            color: #404040;
-            font: 12px monospace;
-            white-space: pre-wrap;
-            padding: 10px 20px;
-            div {
-              margin: 0 0 0.5em;
-            }
-          `}
-        >
-          {textLines}
-        </div>
-      </div>
-    )
-  }
 )
 
 export const Icon = React.forwardRef(({ className, ...props }, ref) => (
@@ -130,7 +84,7 @@ export const Toolbar = React.forwardRef(({ className, ...props }, ref) => (
         position: relative;
         padding: 6px 0;
         border-bottom: 2px solid #eee;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
       `
     )}
   />

@@ -170,13 +170,33 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       //     res.json(response)
       //   })
       // })
+      const FILTER_ALL = 1
+      const FILTER_SATISFIED = 2
+      const FILTER_UNSATISFIED = 3
+      const FILTER_PICTURE = 4
       app.get('/api/rating', (req, res) => {
         const ratings = require('./data/rating/rating.json')
         // 注意将字符串转化为数字, 否则会直接加载完全部的数据
+        const good_ratings = ratings.filter(item => parseInt(item.rating_star) >= 3)
+        const bad_ratings = ratings.filter(item => parseInt(item.rating_star) < 3)
+        const pic_ratings = ratings.filter(item => item.item_rating_list && item.item_rating_list.length > 0 && item.item_rating_list.some(d => !!d.image_hash))
         const limit = parseInt(req.query.limit)
         let offset = parseInt(req.query.offset)
         let end = limit + offset
-        let response = ratings.slice(offset, end)
+        let response
+        switch (parseInt(req.query.record_type)) {
+          case FILTER_SATISFIED:
+              response = good_ratings.slice(offset, end)
+              break;
+          case FILTER_UNSATISFIED:
+            response = bad_ratings.slice(offset, end)
+            break;
+          case FILTER_PICTURE:
+            response = pic_ratings.slice(offset, end)
+            break;
+          default:
+            response = ratings.slice(offset, end)
+        }
         res.json(Object.assign(response, {
           errno: true
         }))

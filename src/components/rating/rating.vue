@@ -24,7 +24,7 @@
     <transition name="wrap">
       <div class="rating-editor-wrapper" v-show="ratingEditorShow">
         <h3 class="rating-title"><span class="material-icons">store</span>店铺评价</h3>
-        <react :component='component' num='5'></react>
+        <react :component='component' num='5' :sellerId="getSellerId" :toggleRatingEditor="toggleRatingEditor"></react>
       </div>
     </transition>
     <div class="rating-list-wrapper" v-if="errno">
@@ -110,7 +110,13 @@ export default {
       if (flag === this.recordType) {
         return
       }
+      console.log('click')
       this.recordType = flag
+      this.loading = false
+      this.noMore = false
+      this.offset = 0
+      this.ratings = []
+      this.loadMore()
     },
     getAvatar (path) {
       if (!path) {
@@ -143,6 +149,22 @@ export default {
     },
     toggleRatingEditor () {
       this.ratingEditorShow = !this.ratingEditorShow
+    },
+    loadMore () {
+      console.log('load more')
+      if (!this.loading && !this.noMore) {
+        this.loading = true
+        getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
+          // this.ratings = this.ratings.concat(res.data)
+          if (res.data.length < this.limit) {
+            this.noMore = true
+          }
+          console.log(res.data.length)
+          this.ratings.push(...(res.data))
+          this.offset = this.ratings.length
+          this.loading = false
+        })
+      }
     }
   },
   watch: {
@@ -164,6 +186,9 @@ export default {
     }
   },
   computed: {
+    getSellerId () {
+      return this.$route.params.id
+    },
     ...mapGetters([
       'seller'
     ])
@@ -179,26 +204,13 @@ export default {
         this.noMore = true
       }
       this.ratings = res.data
-      this.offset = this.ratings.length
+      this.offset = res.data.length
       this.errno = true
     })
     getRatingOverview(this.seller.id).then((res) => {
       this.ratingOverview = res.data
     })
-    window.eventBus.$on('loadMore', () => {
-      if (!this.loading && !this.noMore) {
-        this.loading = true
-        getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
-          // this.ratings = this.ratings.concat(res.data)
-          if (res.data.length < this.limit) {
-            this.noMore = true
-          }
-          this.ratings.push(...res.data)
-          this.offset = this.ratings.length
-          this.loading = false
-        })
-      }
-    })
+    window.eventBus.$on('loadMore', this.loadMore)
   },
   mounted () {
     // const id = this.$route.params.id
