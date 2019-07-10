@@ -17,8 +17,15 @@ class Star extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this)
     this.handleMouseEnter = this.handleMouseEnter.bind(this)
     this.render = this.render.bind(this)
+    this.init = this.init.bind(this)
   }
   num = this.props.num || 5
+  init () {
+    this.setState({
+      stars: Array.from({length: 5}).fill(0),
+      selected: 0
+    })
+  }
   render () {
     let {stars} = this.state
     return (

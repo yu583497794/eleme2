@@ -62,7 +62,16 @@ class RatingEditor extends React.Component {
     this.editor.current.setState({
       showEmojisBar: false
     })
-    setTimeout(this.props.toggleRatingEditor, 2000)
+    this.editor.current.init()
+    this.sellerStar.current.init()
+    this.serviceStar.current.init()
+    this.foodStar.current.init()
+    this.props.toggleRatingEditor()
+    setTimeout(() => {
+      this.setState({
+        completed: false
+      })
+    }, 2000)
   }
 }
 export default RatingEditor

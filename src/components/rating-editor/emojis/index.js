@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 import { Editor } from 'slate-react'
 import { Value, Block } from 'slate'
 
@@ -8,8 +8,7 @@ import {isKeyHotkey} from 'is-hotkey'
 import { cx, css } from 'emotion'
 import { Button, Icon, Toolbar } from '../components'
 import './index.styl'
-import PlaceholderPlugin from 'slate-react-placeholder'
-
+// import PlaceholderPlugin from 'slate-react-placeholder'
 /**
  * Deserialize the initial editor value.
  *
@@ -51,19 +50,19 @@ const isUnderlinedHotkey = isKeyHotkey('mod+u')
  *
  * @type {Component}
  */
-const plugins = [
-  {
-    queries: {
-      isEmpty: editor => {
-        return editor.value.document.text === ''
-      }
-    }
-  },
-  PlaceholderPlugin({
-    placeholder: '请输入评价...',
-    when: 'isEmpty'
-  })
-]
+// const plugins = [
+//   {
+//     queries: {
+//       isEmpty: editor => {
+//         return editor.value.document.text === ''
+//       }
+//     }
+//   },
+//   PlaceholderPlugin({
+//     placeholder: '请输入评价...',
+//     when: 'isEmpty'
+//   })
+// ]
 
 const schema = {
   document: {
@@ -76,7 +75,7 @@ const schema = {
         case 'child_type_invalid':
           return editor.setNodeByKey(child.key, { type: 'paragraph' })
         case 'child_min_invalid':
-            const block = Block.create('paragraph')
+          const block = Block.create('paragraph')
           return editor.insertNodeByKey(node.key, index, block)
         case 'last_child_type_invalid': {
           const paragraph = Block.create('paragraph')
@@ -119,12 +118,28 @@ class Emojis extends React.Component {
     this.onBlur = this.onBlur.bind(this)
     // this.hasMark = this.hasMark.bind(this)
     this.editor = React.createRef()
+    this.init = this.init.bind(this)
   }
-
   state = {
     showEmojisBar: false
   }
-
+  init () {
+    // const controller = this.editor.current
+    console.log('before init', this.editor.current.value.document.text)
+    let nodes = this.editor.current.value.document.nodes
+    // 保留一个paragraph
+    while (nodes.size > 1) {
+      this.editor.current.removeNodeByKey(nodes.get(1).key)
+    }
+    const block = Block.create({
+      type: 'paragraph'
+    })
+    this.editor.current.replaceNodeByKey(nodes.get(0).key, block)
+    // 必须 Synchronously flush the current changes to editor, calling onChange.
+    // 同步将当前更改刷新到编辑器，调用onChange。
+    console.log('after init', this.editor.current.value.document.text)
+    this.editor.current.normalize()
+  }
   toggleEmojisBar () {
     let {showEmojisBar} = this.state
     this.setState({
@@ -139,7 +154,6 @@ class Emojis extends React.Component {
 
   // ref = editor => {
   //   this.editor = editor
-  //   console.log('!!!!', this)
   // }
 
   /**
@@ -163,7 +177,7 @@ class Emojis extends React.Component {
               className={cx(
                 'emojis-bar',
                 'container',
-                'material-icons',
+                'material-icons'
                 // css`
                 //   display: ${showEmojisBar ? 'none' : 'block'};
                 // `
@@ -309,12 +323,19 @@ class Emojis extends React.Component {
       .focus()
   }
   onChange ({value}) {
+    console.log('change', value.document.text)
     this.setState({
       value: JSON.stringify(value.toJSON())
     })
   }
   onKeyDown (event, editor, next) {
     let mark = ''
+    if (isKeyHotkey('mod+r')(event)) {
+      event.preventDefault()
+      this.init()
+      debugger
+      return next()
+    }
     if (isBoldHotkey(event)) {
       mark = 'bold'
     } else if (isItalicHotkey(event)) {
@@ -322,13 +343,10 @@ class Emojis extends React.Component {
     } else if (isUnderlinedHotkey(event)) {
       mark = 'underlined'
     } else {
-      console.log(editor.value.document.nodes.last())
-      console.log('next')
       return next()
     }
     event.preventDefault()
     editor.toggleMark(mark)
-
   }
   onClickMark (event, type) {
     event.preventDefault()
