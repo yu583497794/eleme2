@@ -32,7 +32,7 @@ app.get('/api/menu', (req, res) => {
   res.json(menu)
 })
 app.get('/api/rating', (req, res) => {
-  const ratings = require('./data/rating/rating.json')
+  const ratings = require('./build/data/rating/rating.json')
   // 注意将字符串转化为数字, 否则会直接加载完全部的数据
   const good_ratings = ratings.filter(item => parseInt(item.rating_star) >= 3)
   const bad_ratings = ratings.filter(item => parseInt(item.rating_star) < 3)

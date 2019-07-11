@@ -20,6 +20,23 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
+## 上线须知
+
+1. 修改配置
+
+```
+// /config/index.js
+{
+  build: {
+    port: XXXX
+  }
+}
+```
+
+2. 修改后端接口的端口号
+
+
+
 ## 聊天室模块
 
 ### Socket.io
