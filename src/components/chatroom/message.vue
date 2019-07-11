@@ -7,7 +7,7 @@
       <div class="avatar">
         <img :src="msg.avatar" alt="">
       </div>
-      <div class="message-content">{{msg.msg}}</div>
+      <div class="message-content-wrapper"><span class="message-content">{{msg.msg}}</span></div>
     </div>
   </div>
 </template>
@@ -42,39 +42,47 @@ export default {
     .chat-message
       width 100%
       display flex
-      .message-content
+      .message-content-wrapper
         position relative
-        flex 0
+        flex 0 0 50%
         color #ccc
-        padding 3vw
-        font-size $font-size-medium
-        line-height $font-size-medium
-        border-radius 5px
-        white-space pre-wrap
-        word-wrap break-word
-        max-width 50vw
-        vertical-align middle
-        &::after
-          position absolute
-          content ""
-          border-top 6px solid $color-theme-ll
-          border-left 6px solid transparent
-          border-right 6px solid transparent
-          bottom -6px
-          width 0
+        display flex
+        min-width 3em
+        .message-content
+          flex 0 0 auto
+          position relative
+          max-width 100%
+          font-size $font-size-medium
+          line-height $font-size-medium
+          border-radius 5px
+          padding 3vw
+          white-space pre-wrap
+          vertical-align middle
+          &::after
+            position absolute
+            content ""
+            border-top 6px solid transparent
+            border-bottom  6px solid transparent
+            width 0
+            top 6px
       &.self-message
         flex-direction row-reverse
-        .message-content
-          background $color-theme-dialog
+        .message-content-wrapper
           margin-right 2vw
-          &::after
-            right 10px
+          justify-content flex-end
+          .message-content
+            background $color-theme-dialog
+            &::after
+              border-left 6px solid $color-theme-dialog
+              right -6px
       &.other-message
-        .message-content
-          background $color-theme-ll
+        .message-content-wrapper
           margin-left 2vw
-          &::after
-            left 10px
+          .message-content
+            background $color-theme-ll
+            &::after
+              border-right 6px solid $color-theme-ll
+              left -6px
       .avatar
         flex 0 0 auto
         width 10vw

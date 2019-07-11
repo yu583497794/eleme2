@@ -6,7 +6,7 @@
       </li>
     </ul>
     <form @submit="submitMessage">
-      <input type="text" placeholder="冒个泡吧~" ref="message"/>
+      <input type="text" placeholder="冒个泡吧~" ref="message" class="chatroom-input"/>
       <button ref="msgBtn">发送</button>
       <div class="participator" @click="toggleShow">
         <icon name="participator" scale="3"></icon>
@@ -198,6 +198,7 @@ export default {
         border 3px solid $color-background
         padding 5px 10px
         min-height 30px
+        color $color-text-theme
       button
         flex 0 0 15vw
         direction none

@@ -333,7 +333,6 @@ class Emojis extends React.Component {
     if (isKeyHotkey('mod+r')(event)) {
       event.preventDefault()
       this.init()
-      debugger
       return next()
     }
     if (isBoldHotkey(event)) {
