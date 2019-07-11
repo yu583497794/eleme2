@@ -1,6 +1,10 @@
 var express = require('express');
 var config = require('./config/index');
-var axios = require('axios')
+var axios = require('axios');
+const FILTER_ALL = 1;
+const FILTER_SATISFIED = 2;
+const FILTER_UNSATISFIED = 3;
+const FILTER_PICTURE = 4;
 const app = express();
 // var apiRouter = express.Router();
 var restaurants = require('./restaurants.json')
