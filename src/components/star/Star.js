@@ -15,7 +15,7 @@ class Star extends React.Component {
       selected: 0
     }
     this.handleMouseDown = this.handleMouseDown.bind(this)
-    this.handleMouseEnter = this.handleMouseEnter.bind(this)
+    // this.handleMouseEnter = this.handleMouseEnter.bind(this)
     this.render = this.render.bind(this)
     this.init = this.init.bind(this)
   }
@@ -69,9 +69,9 @@ class Star extends React.Component {
       }
     }
   }
-  handleMouseEnter (e) {
-    console.log('enter')
-  }
+  // handleMouseEnter (e) {
+  //   console.log('enter')
+  // }
   handleMouseDown (e, index) {
     let {stars} = this.state
     let {target: {offsetWidth}, offsetX} = event

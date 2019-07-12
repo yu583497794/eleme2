@@ -166,6 +166,28 @@ class Emojis extends React.Component {
     let {showEmojisBar} = this.state
     return (
       <div className="editor-wrapper">
+        <Editor
+          placeholder="请输入评价😍👋🎉..."
+          ref={this.editor}
+          defaultValue={initialValue}
+          schema={schema}
+          renderBlock={this.renderBlock}
+          renderInline={this.renderInline}
+          renderMark={this.renderMark}
+          // plugins={plugins}
+          onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
+          // onBlur={this.onBlur}
+          className={
+            css`
+              box-sizing: content-box;
+              min-height: 4.2em;
+              line-height: 1.4em;
+              background: rgba(125, 125, 125, 0.7);
+              padding: 1em;
+            `
+          }
+        />
         <Toolbar>
           <div
             className="emojis-btn"
@@ -196,28 +218,6 @@ class Emojis extends React.Component {
           { this.renderMarkButton('italic', 'format_italic') }
           { this.renderMarkButton('underlined', 'format_underlined') }
         </Toolbar>
-        <Editor
-          placeholder="请输入评价😍👋🎉..."
-          ref={this.editor}
-          defaultValue={initialValue}
-          schema={schema}
-          renderBlock={this.renderBlock}
-          renderInline={this.renderInline}
-          renderMark={this.renderMark}
-          // plugins={plugins}
-          onChange={this.onChange}
-          onKeyDown={this.onKeyDown}
-          // onBlur={this.onBlur}
-          className={
-            css`
-              box-sizing: content-box;
-              min-height: 4.2em;
-              line-height: 1.4em;
-              background: rgba(125, 125, 125, 0.7);
-              padding: 1em;
-            `
-          }
-        />
       </div>
     )
   }
@@ -230,7 +230,6 @@ class Emojis extends React.Component {
    * @param {Function} next
    * @return {Element}
    */
-
   renderBlock = (props, editor, next) => {
     const { attributes, children, node } = props
     switch (node.type) {
@@ -323,7 +322,6 @@ class Emojis extends React.Component {
       .focus()
   }
   onChange ({value}) {
-    console.log('change', value.document.text)
     this.setState({
       value: JSON.stringify(value.toJSON())
     })

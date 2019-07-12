@@ -58,6 +58,7 @@ export default {
           padding 3vw
           white-space pre-wrap
           vertical-align middle
+          word-break break-word
           &::after
             position absolute
             content ""

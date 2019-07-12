@@ -66,12 +66,12 @@ class RatingEditor extends React.Component {
     this.sellerStar.current.init()
     this.serviceStar.current.init()
     this.foodStar.current.init()
-    this.props.toggleRatingEditor()
     setTimeout(() => {
       this.setState({
         completed: false
       })
-    }, 2000)
+      this.props.toggleRatingEditor()
+    }, 1000)
   }
 }
 export default RatingEditor

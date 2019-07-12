@@ -47,7 +47,7 @@
             </li>
           </ul>
         </li>
-        <li class="food-tip" v-if="initReady">没有更多了~</li>
+        <li class="food-tip" v-if="initReady && !loading">没有更多了~</li>
       </ul>
     </div>
     <div ref="fixed-category"  id="fixed-category" class="fixed-category">
@@ -78,6 +78,9 @@
         </div>
       </div>
     </transition>
+    <div class="loading-wrapper" v-if="loading">
+      <Loading/>
+    </div>
   </div>
 </template>
 
@@ -86,6 +89,7 @@ import {extraUrl} from 'common/js/banner'
 import {EventUtil} from 'common/js/dom-util'
 import CartButton from 'base/cart-button/cart-button'
 import {mapGetters} from 'vuex'
+import Loading from 'base/loading/loading'
 const TITLE_HEIGHT = 28
 export default {
   name: 'food',
@@ -103,6 +107,10 @@ export default {
     menuList: {
       type: Array,
       default: null
+    },
+    loading: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -327,7 +335,8 @@ export default {
     }, 1000)
   },
   components: {
-    CartButton
+    CartButton,
+    Loading
   }
   // activated () {
   //   console.log('???')
@@ -491,4 +500,13 @@ export default {
           &.desc
             font-size $font-size-small
             color $color-text-l
+    .loading-wrapper
+      position fixed
+      top 0
+      bottom 0
+      left 0
+      right 0
+      display flex
+      justify-content center
+      align-items center
 </style>

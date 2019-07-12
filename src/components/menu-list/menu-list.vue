@@ -1,6 +1,6 @@
 <template>
   <div class="menuList">
-    <food :menuList="menuList"></food>
+    <food :menuList="menuList" :loading="loading"></food>
     <cart></cart>
   </div>
 </template>
@@ -14,13 +14,15 @@ export default {
   name: 'menu-list',
   data () {
     return {
-      menuList: []
+      menuList: [],
+      loading: true
     }
   },
   methods: {
     _getMenu () {
       getMenu(this.seller.id).then((res) => {
         this.menuList = res.data
+        this.loading = false
       })
     }
   },
