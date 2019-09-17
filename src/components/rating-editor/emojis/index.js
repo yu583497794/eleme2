@@ -146,22 +146,6 @@ class Emojis extends React.Component {
       showEmojisBar: !showEmojisBar
     })
   }
-  /**
-   * Store a reference to the `editor`.
-   *
-   * @param {Editor} editor
-   */
-
-  // ref = editor => {
-  //   this.editor = editor
-  // }
-
-  /**
-   * Render the app.
-   *
-   * @return {Element} element
-   */
-
   render () {
     let {showEmojisBar} = this.state
     return (
@@ -214,9 +198,10 @@ class Emojis extends React.Component {
               </div>
             </div>)}
           </div>
-          { this.renderMarkButton('bold', 'format_bold') }
-          { this.renderMarkButton('italic', 'format_italic') }
-          { this.renderMarkButton('underlined', 'format_underlined') }
+          {/* 使用类似&#xe7f7;不会被转义！！！ */}
+          { this.renderMarkButton('bold', '\ue7f7') }
+          { this.renderMarkButton('italic', '\ue7fb') }
+          { this.renderMarkButton('underlined', '\ue7fa') }
         </Toolbar>
       </div>
     )
@@ -307,12 +292,6 @@ class Emojis extends React.Component {
       </Button>
     )
   }
-  /**
-   * When clicking a emoji, insert it
-   *
-   * @param {Event} e
-   */
-
   onClickEmoji = (e, code) => {
     e.preventDefault()
 
@@ -359,8 +338,5 @@ class Emojis extends React.Component {
     })
   }
 }
-/**
- * Export.
- */
 
 export default Emojis

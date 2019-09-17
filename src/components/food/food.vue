@@ -89,6 +89,7 @@ import {extraUrl} from 'common/js/banner'
 import {EventUtil} from 'common/js/dom-util'
 import CartButton from 'base/cart-button/cart-button'
 import {mapGetters} from 'vuex'
+import {getMenu} from 'api/seller'
 import Loading from 'base/loading/loading'
 const TITLE_HEIGHT = 28
 export default {
@@ -100,20 +101,18 @@ export default {
       listHeight: [],
       currentIndex: 0,
       selectedFood: {},
-      initReady: false
-    }
-  },
-  props: {
-    menuList: {
-      type: Array,
-      default: null
-    },
-    loading: {
-      type: Boolean,
-      default: true
+      initReady: false,
+      menuList: [],
+      loading: true
     }
   },
   methods: {
+    _getMenu () {
+      getMenu(this.seller.id).then(res => {
+        this.menuList = res.data
+        this.loading = false
+      })
+    },
     getPrice (food) {
       let minPrice = food.specfoods[0].price
       food.specfoods.forEach(spec => {
@@ -122,28 +121,13 @@ export default {
         }
       })
       return minPrice.toFixed(2)
-      // if (food.specifications.length !== 0) {
-      //   console.log('spec')
-      //   food.specfoods.forEach((spec) => {
-      //     spec.specs.forEach(item => {
-      //       if (item.value === food.specifications[0].values[0]) {
-      //         return spec.price
-      //       }
-      //     })
-      //     if (spec.specs[0].value === food.specifications[0].values[0]) {
-      //       return spec.price
-      //     }
-      //   })
-      // } else {
-      //   return food.specfoods[0].price
-      // }
     },
     getUrl (path) {
       return extraUrl(path)
     },
     resetMenu () {
       const menu = this.$refs.menu
-      menu.style.position = 'static'
+      menu.style.position = 'relative'
       menu.style.top = ''
       menu.style.left = ''
       menu.style.right = ''
@@ -157,35 +141,26 @@ export default {
       menu.style.right = window.innerWidth * 0.75 + 'px'
       menu.style.left = 0
       menu.style.bottom = '12.8vw'
-      menu.style.overflow = 'scroll'
+      menu.style.overflow = 'auto'
     },
     _calculateHeight () {
       // 容易报错的地方
       let foodList = document.getElementsByClassName('food-list-hook')
       let height = 0
       this.listHeight.push(height)
-      // foodList.forEach((item, index) => {
-      //   height += item.clientHeight
-      //   this.listHeight.push(height)
-      // })
       for (let i = 0; i < foodList.length; i++) {
         let item = foodList[i]
         height = height + item.clientHeight
         this.listHeight.push(height)
       }
     },
-    // ???有必要保留么
     scrollHandler (event) {
       EventUtil.stop(event)
     },
     _initFixedCategory () {
       const category = this.$refs['fixed-category']
-      // category.style.position = 'fixed'
       category.style.top = this.top + 'px'
-      // category.style.right = 0
-      category.style.left = window.innerWidth * 0.25 + 'px'
-      // category.style['box-sizing'] = 'border-box'
-      // category.style['z-index'] = 1
+      category.style.left = '25vw'
     },
     selectCategory (index) {
       const totalHeight = this.$refs['foodWrapper'].clientHeight
@@ -210,26 +185,6 @@ export default {
     closeDetail () {
       this.selectedFood = {}
     }
-    // foodScrollHandler (scrollTop) {
-    //   if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
-    //     // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-    //     let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-    //     if (this.diff === diff) {
-    //       return
-    //     }
-    //     this.diff = diff
-    //     const category = document.getElementById('fixed-category')
-    //     category.style.transform = `translate3d(0, -${diff}px, 0)`
-    //     return
-    //   }
-    //   if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
-    //     this.currentIndex++
-    //   } else {
-    //     if (scrollTop < this.listHeight[this.currentIndex]) {
-    //       this.currentIndex--
-    //     }
-    //   }
-    // }
   },
   computed: {
     fixedCategoryName () {
@@ -250,19 +205,11 @@ export default {
         })
         list[i] += item.count
       })
-      // this.menuList.forEach((category, index) => {
-      //   list[index] = 0
-      //   time = 0
-      //   this.cartList.forEach(item => {
-      //     if (category.foods[0].category_id === item.category && index !== 0) {
-      //       list[index] = list[index] + item.count
-      //     }
-      //   })
-      // })
       return list
     },
     ...mapGetters([
-      'cartList'
+      'cartList',
+      'seller'
     ])
   },
   watch: {
@@ -273,14 +220,11 @@ export default {
         this.resetMenu()
       }
     },
-    currentIndex (newVal) {
-      // if (this.listHeight[newVal])
+    menuList () {
+      this.$nextTick(() => {
+        this._calculateHeight()
+      })
     }
-    // 无效
-    // menuList () {
-    //   this.listHeight = []
-    //   this._calculateHeight()
-    // }
   },
   created () {
     window.eventBus.$on('eventFixed', (flag, height) => {
@@ -295,54 +239,40 @@ export default {
         category.style.top = this.top + 'px'
       }
     })
+    window.eventBus.$on('foodScroll', (scrollTop) => {
+      if (this.$route.path.split('/').pop() !== 'menu') {
+        return
+      }
+      if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
+        // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
+        let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
+        if (this.diff === diff) {
+          return
+        }
+        this.diff = diff
+        const category = document.getElementById('fixed-category')
+        category.style.transform = `translate3d(0, -${diff}px, 0)`
+        return
+      }
+      if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
+        this.currentIndex++
+      } else {
+        if (scrollTop < this.listHeight[this.currentIndex]) {
+          this.currentIndex--
+        }
+      }
+    })
+    this._getMenu()
   },
   mounted () {
-    // this.resetMenu()
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this._calculateHeight()
-        EventUtil.addHandler(this.$refs.menu, 'scroll', this.scrollHandler)
-        window.eventBus.$on('foodScroll', (scrollTop) => {
-          if (this.$route.path.split('/').pop() !== 'menu') {
-            return
-          }
-          if (scrollTop < this.listHeight[this.currentIndex + 1] && scrollTop >= this.listHeight[this.currentIndex]) {
-            // let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-            let diff = Math.max(0, Math.min(TITLE_HEIGHT - this.listHeight[this.currentIndex + 1] + scrollTop, TITLE_HEIGHT))
-            if (this.diff === diff) {
-              return
-            }
-            this.diff = diff
-            const category = document.getElementById('fixed-category')
-            category.style.transform = `translate3d(0, -${diff}px, 0)`
-            return
-          }
-          if (scrollTop >= this.listHeight[this.currentIndex + 1]) {
-            this.currentIndex++
-          } else {
-            if (scrollTop < this.listHeight[this.currentIndex]) {
-              this.currentIndex--
-            }
-          }
-        })
-      }, 1000)
-      this.resetMenu()
-      // this._calculateHeight()
-    })
+    EventUtil.addHandler(this.$refs.menu, 'scroll', this.scrollHandler)
     this._initFixedCategory()
-    setTimeout(() => {
-      this.initReady = true
-    }, 1000)
+    this.initReady = true
   },
   components: {
     CartButton,
     Loading
   }
-  // activated () {
-  //   console.log('???')
-  //   window.eventBus.$on('foodScroll', this.foodScrollHandler)
-  //   console.log(window.eventBus)
-  // }
 }
 </script>
 

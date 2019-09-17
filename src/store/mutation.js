@@ -37,7 +37,6 @@ const mutation = {
     state.logined = false
   },
   [types.SET_FAVORITE] (state, list) {
-    console.log(list)
     state.user.favorite = list
   },
   [types.SET_USER] (state, user) {

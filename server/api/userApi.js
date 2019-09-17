@@ -86,6 +86,10 @@ router.post('/login', (req, res) => {
           code: 1
         })
         // jsonWrite(res, ret)
+        res.cookie('user_id', encodeURIComponent(resultArray.id), {
+          maxAge: 900000
+        })
+        res.cookie('last_login_time', new Date())
         res.send(ret)
       } else {
         res.send({

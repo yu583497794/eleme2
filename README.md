@@ -158,3 +158,22 @@ new Vue({
 ## Vue使用中的问题
 
 watch 和 computed 无法监听数组和对象的变化,因此要使用this.$set(array, index, value)
+
+## MySql8.0.13 密码问题 
+[ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)](https://blog.csdn.net/sinat_31057219/article/details/84402896#commentBox)
+
+```
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YourRootPassword';
+FLUSH PRIVILEGES;
+```
+
+## 动态使用iconfont
+
+例如：
+&#xe601;
+改成:
+\ue601
+即可, 否则不会被转义
+```
+<i className='iconfont'>{props.children}</i>
+```

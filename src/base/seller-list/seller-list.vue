@@ -30,7 +30,7 @@
 <script type="text/ecmascript-6">
 import {mapGetters, mapMutations} from 'vuex'
 export default {
-  name: 'seeler-list',
+  name: 'seller-list',
   methods: {
     enterShop (seller) {
       this.setSeller(seller)

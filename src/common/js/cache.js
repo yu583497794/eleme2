@@ -3,7 +3,7 @@ const USER_KEY = '__user__'
 const LIKE_MAX_LENGTH = 10
 function findUser (arr, id) {
   let ret = arr.findIndex((item) => {
-    return item.id === id
+    return item.id === Number(id)
   })
   // arr.forEach((item, index) => {
   //   if (item.id === id) {

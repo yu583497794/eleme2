@@ -151,7 +151,6 @@ export default {
       this.ratingEditorShow = !this.ratingEditorShow
     },
     loadMore () {
-      console.log('load more')
       if (!this.loading && !this.noMore) {
         this.loading = true
         getRating(this.seller.id, this.limit, this.offset, this.recordType).then((res) => {
@@ -159,7 +158,6 @@ export default {
           if (res.data.length < this.limit) {
             this.noMore = true
           }
-          console.log(res.data.length)
           this.ratings.push(...(res.data))
           this.offset = this.ratings.length
           this.loading = false

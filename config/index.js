@@ -13,7 +13,7 @@ module.exports = {
     // !!!用来设置地址映射表
     proxyTable: {
       '/log-api': {
-        target: 'http://127.0.0.1:3008/log-api',
+        target: 'http://127.0.0.1:3006/log-api',
         changeOrigin: true,
         pathRewrite: {
           '^/log-api': ''

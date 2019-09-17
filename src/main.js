@@ -11,6 +11,7 @@ import resource from './resource/index'
 import 'common/stylus/index.styl'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+// import 'common/iconfont/iconfont.css'
 // import VueReact from 'vue-react'
 // import {VuePlugin} from 'vuera'
 // eslint-disable-next-line

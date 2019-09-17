@@ -10,11 +10,13 @@
         <div class="desc">
           <h2 class="name">
             <span class="favorite"  v-if="logined" @click="toggleFavorite">
-              <icon scale="2" :name="isFavorite ? 'favorite' : 'unfavorite'" fill="#ffcd32"></icon>
+              <!-- <icon scale="2" :name="isFavorite ? 'favorite' : 'unfavorite'" fill="#ffcd32"></icon> -->
+              <i class="iconfont">{{isFavorite ? '&#xe849;' : '&#xe8ff;'}}</i>
             </span>
             <span class="name-text">{{seller.name}}</span>
             <span class="enter" @click="toggleDetail('seller')">
-              <icon name="enter" scale="2" class="enter"></icon>
+              <!-- <icon name="enter" scale="2" class="enter"></icon> -->
+              <i class="iconfont">&#xe7eb;</i>
             </span>
           </h2>
           <section class="base-info">
@@ -28,14 +30,16 @@
             </div>
             <div class="total" v-if="seller.activities && seller.activities.length > 1" @click.stop="toggleDetail('activity')">
               <span class="text">{{seller.activities && seller.activities.length}}个活动</span>
-              <icon scale="1.5" :name="showFlag.activity ? 'fold' : 'unfold'" class="icon-fold"></icon>
+              <!-- <icon scale="1.5" :name="showFlag.activity ? 'fold' : 'unfold'" class="icon-fold"></icon> -->
+              <i class="iconfont">{{showFlag.activity ? '&#xe7ee;' : '&#xe7ed;'}}</i>
             </div>
           </section>
           <section class="bullet" v-if="seller.promotion_info">
             <p>公告:{{seller.promotion_info}}</p>
           </section>
           <div class="back" @click="back">
-            <icon name="back" scale="3" fill="white"></icon>
+            <!-- <icon name="back" scale="3" fill="white"></icon> -->
+            <i class="iconfont" style='font-size: 20px;text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);'>&#xe7ef;</i>
           </div>
         </div>
       </div>
@@ -45,11 +49,6 @@
       <div class="tab-fixed" v-show="fixed">
         <tab></tab>
       </div>
-      <keep-alive>
-        <transition :name="transitionName">
-          <router-view class="child-view"></router-view>
-        </transition>
-      </keep-alive>
       <div class="activity-bg" v-show="ifShow" @click.stop="toggleDetail(isShowing)"></div>
       <transition name="slide-up">
         <div class="activity-panel" v-show="showFlag.activity">
@@ -98,6 +97,11 @@
           </div>
         </div>
       </transition>
+      <keep-alive>
+        <transition :name="transitionName">
+          <router-view class="child-view"></router-view>
+        </transition>
+      </keep-alive>
     </div>
   </transition>
 </template>
@@ -226,13 +230,12 @@ export default {
     let seller = document.getElementById('seller')
     let head = document.getElementById('seller-head')
     let tab = document.getElementById('seller-tab')
+    this.fixHeight = head.clientHeight
+    this.tabHeight = tab.clientHeight
     window.eventBus.$on('scrollToCat', (height) => {
-      // const offsetHeight = this.fixHeight + this.tabHeight
       this.scrollTo(height + this.fixHeight)
     })
     EventUtil.addHandler(seller, 'scroll', this.scrollHandler)
-    this.fixHeight = head.clientHeight
-    this.tabHeight = tab.clientHeight
   },
   created () {
     if (this.seller.id === undefined) {
@@ -250,7 +253,13 @@ export default {
       }
       let oldIndex = pathIndex[from.path.split('/').pop()]
       let newIndex = pathIndex[to.path.split('/').pop()]
+      let head = document.getElementById('seller-head')
       this.transitionName = newIndex - oldIndex > 0 ? 'slide-right' : 'slide-left'
+      this.$nextTick(() => {
+        // 确保切换子路由后滚动状态会复原
+        // document.querySelector('#seller').scrollTop = document.querySelector('#seller').scrollTop > head.clientHeight ? head.clientHeight : document.querySelector('#seller').scrollTop
+        document.querySelector('#seller').scrollTo(0, document.querySelector('#seller').scrollTop > head.clientHeight ? head.clientHeight : document.querySelector('#seller').scrollTop)
+      })
     }
   }
 }

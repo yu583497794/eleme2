@@ -1,5 +1,6 @@
 import * as types from './mutation-types'
 import {loadFavorite, saveFavorite, deleteFavorite} from 'common/js/cache'
+import CookieUtil from 'common/js/cookie-util'
 function findIndex (foodList, food) {
   let i = -1
   foodList.forEach((item, index) => {
@@ -31,10 +32,6 @@ export const minusFoodAction = function ({commit, state}, food) {
 }
 
 export const loginAction = function ({commit, state}, user) {
-  // state.user.id = user.id
-  // state.user.favorite = loadFavorite(user.id)
-  // console.log('load:' + loadFavorite(user.id))
-  // console.log(loadFavorite(user.id))
   commit(types.SET_USER, {
     id: user.id,
     favorite: loadFavorite(user.id)
@@ -45,6 +42,7 @@ export const loginAction = function ({commit, state}, user) {
 export const logoutAction = function ({commit}) {
   // state.user.id = 0
   // state.user.favorite = []
+  CookieUtil.unset('user_id')
   commit(types.SET_USER, {
     id: 0,
     favorite: []

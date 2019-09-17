@@ -62,7 +62,9 @@
         <div class="tip" v-if="!hasNext">Sorry,没有更多内容了</div>
       </ul>
     </div>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 

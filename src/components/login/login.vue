@@ -116,6 +116,7 @@ export default {
             border-radius 2vw
             background $color-background
             color $color-text
+            padding 0 2vw
         .login-btn
           text-align center
           padding 0 3.666667vw

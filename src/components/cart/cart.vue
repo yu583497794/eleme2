@@ -7,7 +7,8 @@
       <div class="cart-list-title">
         <span>已选商品</span>
         <div class="clear" @click.stop="clear">
-          <icon name="clear" scale="1.2"></icon>
+          <!-- <icon name="clear" scale="1.2"></icon> -->
+          <i class="iconfont">&#xe7c3;</i>
           <span>清空</span>
         </div>
       </div>
@@ -27,7 +28,8 @@
     <div class="cart-main">
       <div class="icon-wrapper" @click="toggleCartList">
         <span class="circle" :class="{'actived': totalCount > 0}">
-          <icon name="cart" class="cart-icon" scale="2.5"></icon>
+          <!-- <icon name="cart" class="cart-icon" scale="2.5"></icon> -->
+          <i class="iconfont">&#xe600;</i>
           <span class="total-count" v-if="totalCount > 0">{{totalCount}}</span>
         </span>
       </div>

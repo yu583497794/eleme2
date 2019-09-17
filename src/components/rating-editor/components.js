@@ -1,5 +1,6 @@
 import React from 'react'
 import { cx, css } from 'emotion'
+import 'common/iconfont/iconfont.css'
 
 export const Button = React.forwardRef(
   ({ className, active, reversed, ...props }, ref) => (
@@ -27,7 +28,7 @@ export const Icon = React.forwardRef(({ className, ...props }, ref) => (
     {...props}
     ref={ref}
     className={cx(
-      'material-icons',
+      // 'material-icons',
       className,
       css`
         font-size: 18px;
@@ -35,7 +36,9 @@ export const Icon = React.forwardRef(({ className, ...props }, ref) => (
         flex 1;
       `
     )}
-  />
+  >
+    <i className='iconfont'>{props.children}</i>
+  </span>
 ))
 
 export const Instruction = React.forwardRef(({ className, ...props }, ref) => (
