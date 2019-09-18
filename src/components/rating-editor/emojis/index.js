@@ -177,7 +177,7 @@ class Emojis extends React.Component {
             className="emojis-btn"
           >
             <Button onMouseDown={this.toggleEmojisBar}>
-              <Icon >{'face'}</Icon>
+              <Icon >{'\ue783'}</Icon>
             </Button>
             { showEmojisBar && (<div
               className={cx(

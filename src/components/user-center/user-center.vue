@@ -1,6 +1,6 @@
 <template>
   <div class="user-center">
-    <h2 class="title"><icon scale=1.5 name="favorite" class="favorite-icon"/>我的收藏</h2>
+    <h2 class="title"><i class="iconfont">&#xe849;</i>我的收藏</h2>
     <div class="list-wrapper">
       <seller-list></seller-list>
     </div>

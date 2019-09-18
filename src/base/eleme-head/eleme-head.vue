@@ -17,7 +17,7 @@
       <icon name="girl" scale="6" class="head-icon"></icon>
       <h1 class="title">Fairy Eleme</h1>
       <div class="user-icon-wrapper" @click="toggleMenu">
-        <icon name="user" scale="2"></icon>
+        <i class="iconfont" style='color: #ffcd32; font-size: 20px;'>&#xe7ae;</i>
       </div>
     </div>
   </div>

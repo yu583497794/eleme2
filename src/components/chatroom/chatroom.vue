@@ -9,7 +9,8 @@
       <input type="text" placeholder="冒个泡吧~" ref="message" class="chatroom-input"/>
       <button ref="msgBtn">发送</button>
       <div class="participator" @click="toggleShow">
-        <icon name="participator" scale="3"></icon>
+        <!-- <icon name="participator" scale="3"></icon> -->
+        <i class="iconfont">&#xe7af;</i>
       </div>
     </form>
     <transition name="unfold">

@@ -10,12 +10,10 @@
         <div class="desc">
           <h2 class="name">
             <span class="favorite"  v-if="logined" @click="toggleFavorite">
-              <!-- <icon scale="2" :name="isFavorite ? 'favorite' : 'unfavorite'" fill="#ffcd32"></icon> -->
               <i class="iconfont">{{isFavorite ? '&#xe849;' : '&#xe8ff;'}}</i>
             </span>
             <span class="name-text">{{seller.name}}</span>
             <span class="enter" @click="toggleDetail('seller')">
-              <!-- <icon name="enter" scale="2" class="enter"></icon> -->
               <i class="iconfont">&#xe7eb;</i>
             </span>
           </h2>
@@ -30,7 +28,6 @@
             </div>
             <div class="total" v-if="seller.activities && seller.activities.length > 1" @click.stop="toggleDetail('activity')">
               <span class="text">{{seller.activities && seller.activities.length}}个活动</span>
-              <!-- <icon scale="1.5" :name="showFlag.activity ? 'fold' : 'unfold'" class="icon-fold"></icon> -->
               <i class="iconfont">{{showFlag.activity ? '&#xe7ee;' : '&#xe7ed;'}}</i>
             </div>
           </section>
@@ -38,7 +35,6 @@
             <p>公告:{{seller.promotion_info}}</p>
           </section>
           <div class="back" @click="back">
-            <!-- <icon name="back" scale="3" fill="white"></icon> -->
             <i class="iconfont" style='font-size: 20px;text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);'>&#xe7ef;</i>
           </div>
         </div>
@@ -92,7 +88,7 @@
           </div>
           <div class="close" @click.stop="toggleDetail('seller')">
             <span>
-              <icon name="close" scale="2"></icon>
+              <i class="iconfont">&#xe7fc;</i>
             </span>
           </div>
         </div>
@@ -258,7 +254,10 @@ export default {
       this.$nextTick(() => {
         // 确保切换子路由后滚动状态会复原
         // document.querySelector('#seller').scrollTop = document.querySelector('#seller').scrollTop > head.clientHeight ? head.clientHeight : document.querySelector('#seller').scrollTop
-        document.querySelector('#seller').scrollTo(0, document.querySelector('#seller').scrollTop > head.clientHeight ? head.clientHeight : document.querySelector('#seller').scrollTop)
+        let sellerDOM = document.querySelector('#seller')
+        if (sellerDOM && sellerDOM.scrollTop) {
+          sellerDOM.scrollTo(0, document.querySelector('#seller').scrollTop > head.clientHeight ? head.clientHeight : sellerDOM.scrollTop)
+        }
       })
     }
   }

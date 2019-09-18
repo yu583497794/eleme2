@@ -3,12 +3,10 @@
     <div class="button-group">
       <transition name="fade-rotate">
         <span class="minus" @click.stop="minusFood" v-show="count > 0">
-          <!-- <icon class="icon inner" name="minus" scale="1.5" fill="#ffcd32"></icon> -->
           <i class="iconfont">&#xe780;</i>
         </span>
       </transition>
       <span class="add" @click.stop="addFood">
-        <!-- <icon class="icon" name="add-fill" scale="1.5" fill="#ffcd32"></icon> -->
         <i class="iconfont">&#xe845;</i>
       </span>
     </div>
@@ -27,7 +25,6 @@
               <div class="price">¥{{currentPrice}}</div>
             </div>
             <div class="close">
-              <!-- <icon name="close" scale="1.5" @click.stop="hiddenSpec"></icon> -->
               <i class="iconfont" style='font-weight: bold; color: white'>&#xe7fc;</i>
             </div>
           </div>

@@ -1,19 +1,23 @@
 <template>
   <div class="foot">
     <router-link tag="div" to="/miste" class="foot-item" id="miste">
-      <icon name="home" scale="2" class="icon"></icon>
+      <!-- <icon name="home" scale="2" class="icon"></icon> -->
+      <i class="iconfont">&#xe7c6;</i>
       <span class="text">外卖</span>
     </router-link>
     <router-link tag="div" to="/chatroom" class="foot-item" id="chatroom">
-      <icon name="form" scale="2" class="icon"></icon>
+      <i class="iconfont">&#xe78a;</i>
+      <!-- <icon name="form" scale="2" class="icon"></icon> -->
       <span class="text">聊天室</span>
     </router-link>
     <!-- <router-link tag="div" to="/search" class="foot-item" id="search">
       <icon name="search" scale="2" class="icon"></icon>
+      <i class='iconfont'>&#xe8ef;</i>
       <span class="text">搜索</span>
     </router-link> -->
     <router-link tag="div" to="/profile" class="foot-item" id="profile">
-      <icon name="Smile" scale="2" class="icon"></icon>
+      <!-- <icon name="Smile" scale="2" class="icon"></icon> -->
+      <i class="iconfont">&#xe783;</i>
       <span class="text">我的</span>
     </router-link>
   </div>

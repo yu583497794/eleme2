@@ -52,7 +52,8 @@
       <h3>
         <span class="title">商家资质</span>
         <span class="icon">
-          <icon name="enter" scale="2"></icon>
+          <!-- <icon name="enter" scale="2"></icon> -->
+          <i class="iconfont">&#xe7eb;</i>
         </span>
       </h3>
     </div>

@@ -51,7 +51,7 @@
                 </ul>
                 <div class="total" v-if="recommend.activities.length > 2" @click.stop="toggleFold(recommend)">
                   <span class="text">{{recommend.activities.length}}个活动</span>
-                  <icon scale="1.5" :name="recommend.unfold ? 'fold' : 'unfold'" class="icon-fold"></icon>
+                  <i class="iconfont">{{recommend.unfold ? '&#xe7ee;' : '&#xe7ed;'}}</i>
                 </div>
               </section>
               <section></section>
@@ -62,9 +62,7 @@
         <div class="tip" v-if="!hasNext">Sorry,没有更多内容了</div>
       </ul>
     </div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <router-view></router-view>
   </div>
 </template>
 

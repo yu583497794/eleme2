@@ -74,7 +74,8 @@
           </section>
         </div>
         <div class="close" @click="closeDetail">
-          <icon name="close" scale="2" class="icon-close"></icon>
+          <!-- <icon name="close" scale="2" class="icon-close"></icon> -->
+          <i class="iconfont">&#xe7fc;</i>
         </div>
       </div>
     </transition>

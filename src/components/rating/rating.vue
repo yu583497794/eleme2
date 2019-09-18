@@ -23,7 +23,7 @@
     </div>
     <transition name="wrap">
       <div class="rating-editor-wrapper" v-show="ratingEditorShow">
-        <h3 class="rating-title"><span class="material-icons">store</span>店铺评价</h3>
+        <h3 class="rating-title"><i class="iconfont">&#xe871;</i>店铺评价</h3>
         <react :component='component' num='5' :sellerId="getSellerId" :toggleRatingEditor="toggleRatingEditor"></react>
       </div>
     </transition>
@@ -57,7 +57,7 @@
             </section>
             <section class="part-food" v-if="rating.item_rating_list && rating.item_rating_list.length > 0">
               <ul>
-                <span class="good-icon"><icon name="good" scale="2"></icon></span>
+                <span class="good-icon"><i class="iconfont">&#xe7c8;</i></span>
                 <li v-for="(item, index) in rating.item_rating_list"
                 :key="index" class="item-rating">{{item.rate_name}}
                 </li>
