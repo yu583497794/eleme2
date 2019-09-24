@@ -25,11 +25,10 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-dom-server": "^0.0.5",
     "react-inlinesvg": "^0.8.4",
     "react-svg": "^10.0.10",
     "slate": "^0.47.4",
-    "slate-plain-serializer": "^0.7.6",
+    "slate-plain-serializer": "^0.7.10",
     "slate-react": "^0.22.4",
     "slate-react-placeholder": "^0.2.4",
     "socket.io": "^2.2.0",
@@ -37,10 +36,8 @@
     "swiper": "^4.4.2",
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.6",
-    "vue-react": "^1.2.0",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
-    "vuera": "^0.2.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

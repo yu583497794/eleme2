@@ -1,7 +1,5 @@
 import React from 'react'
-import Emojis from './emojis/index.js'
-// eslint-disable-next-line
-import {Value} from 'slate'
+import Editor from '../editor'
 import Star from '../star/Star'
 import './index.styl'
 import loading from './loading.gif'
@@ -11,7 +9,7 @@ class RatingEditor extends React.Component {
     this.sellerStar = React.createRef()
     this.serviceStar = React.createRef()
     this.foodStar = React.createRef()
-    this.editor = React.createRef()
+    // this.editor = React.createRef()
     this.submitRating = this.submitRating.bind(this)
     this.state = {
       completed: false
@@ -33,7 +31,7 @@ class RatingEditor extends React.Component {
             <span className="rating-star-label">服务</span><Star ref={this.serviceStar}></Star>
           </li>
         </ul>
-        <Emojis ref={this.editor}/>
+        <Editor/>
         <button
           className='rating-submit-btn'
           onMouseDown={this.submitRating}
@@ -52,17 +50,17 @@ class RatingEditor extends React.Component {
       sellerStar: this.sellerStar.current.state.selected,
       serviceStar: this.serviceStar.current.state.selected,
       foodStar: this.foodStar.current.state.selected,
-      content: this.editor.current.state.value,
+      // content: this.editor.current.state.value,
       sellerId
     }
     console.log(data)
     this.setState({
       completed: true
     })
-    this.editor.current.setState({
-      showEmojisBar: false
-    })
-    this.editor.current.init()
+    // this.editor.current.setState({
+    //   showEmojisBar: false
+    // })
+    // this.editor.current.init()
     this.sellerStar.current.init()
     this.serviceStar.current.init()
     this.foodStar.current.init()

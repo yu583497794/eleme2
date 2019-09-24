@@ -10,6 +10,8 @@ function addParticipator (user) {
 function removeParticipator (id) {
   participators = participators.filter(part => part.id !== id)
 }
+// socket是建立的单个连接
+// io是广播
 io.on('connection', (socket) => {
   io.emit('welcome', {
     msg: `welcome ${socket.id}~`,

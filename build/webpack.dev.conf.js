@@ -17,7 +17,6 @@ var axios = require('axios')
 const app = express()
 var restaurants = require('../restaurants.json')
 var ratings = require('./data/rating/rating.json')
-// console.log(restaurants)
 var apiRoutes = express.Router()
 
 app.use('/api', apiRoutes)
@@ -175,7 +174,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       const FILTER_UNSATISFIED = 3
       const FILTER_PICTURE = 4
       app.get('/api/rating', (req, res) => {
-        const ratings = require('./data/rating/rating.json')
+        // const ratings = require('./data/rating/rating.json')
         // 注意将字符串转化为数字, 否则会直接加载完全部的数据
         const good_ratings = ratings.filter(item => parseInt(item.rating_star) >= 3)
         const bad_ratings = ratings.filter(item => parseInt(item.rating_star) < 3)
@@ -231,13 +230,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             'x-shard': 'loc=114.414724,30.515977'
           }
         }).then((response) => {
-          console.log(response)
           res.json(response.data)
         }).catch(e => {
           const response = Object.assign({}, e.data, {
             images: ["b65be36c9540d3963d49b583a182229fjpeg", "1514dce1b89136537dab5725d558741bjpeg"]
           })
-          console.log(response)
           res.json(response)
         })
       })

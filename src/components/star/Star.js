@@ -47,6 +47,7 @@ class Star extends React.Component {
               css`
                 display: inline-block;
                 padding: 3px;
+                cursor: pointer;
               `
             )}
           >

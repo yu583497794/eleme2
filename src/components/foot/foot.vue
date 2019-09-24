@@ -20,6 +20,10 @@
       <i class="iconfont">&#xe783;</i>
       <span class="text">我的</span>
     </router-link>
+    <!-- <router-link tag='div' to='/search' class="foot-item" id="search">
+      <i class="iconfont">&#xe783;</i>
+      <span class="text">测试</span>
+    </router-link> -->
   </div>
 </template>
 

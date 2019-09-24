@@ -2,8 +2,9 @@
   <div class="search">
     <eleme-head></eleme-head>
     <div class="test">实现中
-      <dot class="loading">...</dot>
+      <!-- <dot class="loading">...</dot> -->
       <loading-dot></loading-dot>
+      <div id="editor-wrapper"></div>
     </div>
   </div>
 </template>
@@ -11,6 +12,10 @@
 <script type="text/ecmascript-6">
 import ElemeHead from 'base/eleme-head/eleme-head'
 import LoadingDot from 'base/loading-dot/loading-dot'
+import ReactDOM from 'react-dom'
+// eslint-disable-next-line
+import React from 'react'
+import Editor from '../editor'
 export default {
   name: 'search',
   data () {
@@ -21,16 +26,15 @@ export default {
   components: {
     ElemeHead,
     LoadingDot
-  }
+  },
   // methods: {
   //   toggleFlag () {
   //     this.flag = !this.flag
   //   }
   // }
-  // mounted () {
-  //   let test = document.getElementsByClassName('test')[0]
-  //   test.innerHTML = '实现中<span class="loading"></span>'
-  // }
+  mounted () {
+    ReactDOM.render(<Editor/>, document.querySelector('#editor-wrapper'))
+  }
 }
 </script>
 

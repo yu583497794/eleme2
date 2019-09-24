@@ -11,11 +11,7 @@ import resource from './resource/index'
 import 'common/stylus/index.styl'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-// import 'common/iconfont/iconfont.css'
-// import VueReact from 'vue-react'
-// import {VuePlugin} from 'vuera'
-// eslint-disable-next-line
-// import axios from 'axios'
+
 Vue.config.productionTip = false
 Vue.component('icon', Icon)
 Vue.use(VueLazyLoad, {
@@ -23,17 +19,8 @@ Vue.use(VueLazyLoad, {
 })
 Vue.use(ElementUI)
 
-// Vue.use(VueReact)
-// // eslint-disable-next-line
-// import RatingEditor from './components/rating-editor/RatingEditor.js'
-
-// Vue.react('Editor', RatingEditor)
-// Vue.use(VuePlugin)
-// let axios = require('axios')
-// axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-// Vue.prototype.$http = axios
-/* eslint-disable no-new */
 window.eventBus = new Vue()
+// eslint-disable-next-line
 new Vue({
   el: '#app',
   router,

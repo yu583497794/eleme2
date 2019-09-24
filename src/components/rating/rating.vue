@@ -24,7 +24,8 @@
     <transition name="wrap">
       <div class="rating-editor-wrapper" v-show="ratingEditorShow">
         <h3 class="rating-title"><i class="iconfont">&#xe871;</i>店铺评价</h3>
-        <react :component='component' num='5' :sellerId="getSellerId" :toggleRatingEditor="toggleRatingEditor"></react>
+        <!-- <react :component='component' num='5' :sellerId="getSellerId" :toggleRatingEditor="toggleRatingEditor"></react> -->
+        <div id="editor-wrapper"></div>
       </div>
     </transition>
     <div class="rating-list-wrapper" v-if="errno">
@@ -77,15 +78,14 @@
 </template>
 
 <script type="text/ecmascript-6">
+/* eslint-disable */
 import {mapGetters} from 'vuex'
 import {getRating, getRatingOverview} from 'api/seller'
 import Star from 'base/star/star'
 import {extraUrl} from 'common/js/banner'
 import Loading from 'base/loading/loading'
-// import ReactDOM from 'react-dom'
-import RatingEditor from '../rating-editor/RatingEditor.js'
-// import PlainText from '../rating-editor/test.js'
-import {ReactWrapper} from 'vuera'
+import ReactDOM from 'react-dom'
+import RatingEditor from '../rating-pannel'
 // eslint-disable-next-line
 import React from 'react'
 const ratingWordsList = ['超赞', '满意', '一般', '失望', '极差']
@@ -93,7 +93,6 @@ export default {
   name: 'rating',
   data () {
     return {
-      component: RatingEditor,
       ratings: [],
       limit: 10,
       ratingOverview: {},
@@ -110,7 +109,6 @@ export default {
       if (flag === this.recordType) {
         return
       }
-      console.log('click')
       this.recordType = flag
       this.loading = false
       this.noMore = false
@@ -140,11 +138,6 @@ export default {
       return ratingWordsList[index]
     },
     fixNum (num, dim) {
-      // if (!(num instanceof Number)) {
-      //   return 0
-      // }
-      // console.log(num)
-      // return num.toFixed(dim)
       return Math.floor(num * 10) / 10
     },
     toggleRatingEditor () {
@@ -193,8 +186,7 @@ export default {
   },
   components: {
     Star,
-    Loading,
-    react: ReactWrapper
+    Loading
   },
   created () {
     getRating(this.seller.id, this.limit).then((res) => {
@@ -211,8 +203,7 @@ export default {
     window.eventBus.$on('loadMore', this.loadMore)
   },
   mounted () {
-    // const id = this.$route.params.id
-    // ReactDOM.render(<RatingEditor sellerid={id}/>, document.querySelector('.rating-editor-wrapper'))
+    ReactDOM.render(<RatingEditor sellerId={this.$route.params.id} num='5' toggleRatingEditor={() => this.toggleRatingEditor()}/>, document.querySelector('#editor-wrapper'))
   }
 }
 </script>
