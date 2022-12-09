@@ -15,7 +15,7 @@
     "body-parser": "^1.18.3",
     "element-ui": "^2.7.2",
     "emotion": "^10.0.14",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "good-storage": "^1.1.0",
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
